@@ -41,7 +41,7 @@ Sin clave se muestra un resumen **determinista simulado**. El modelo objetivo me
 - `data/`: datos ficticios para demostración.
 - `LICENSE`: MIT.
 
-**Estado de entrega:** esta publicación contiene una versión ejecutable del prototipo y la documentación esencial. Los informes Word/PDF y las capturas originales del paquete completo no están incorporados en este commit. Conservar el ZIP PC2 entregado en ChatGPT para adjuntarlos.
+**Estado de entrega:** código, documentación académica en **Word y PDF**, informe de aporte personal, capturas de la simulación, tres alternativas de diseño, diagramas C4/Gantt, fuentes LEC06 y LEC07. Consulta el [índice de evidencias de la PC2](docs/00-ENTREGA-PC2.md).
 
 ## Seguridad
 

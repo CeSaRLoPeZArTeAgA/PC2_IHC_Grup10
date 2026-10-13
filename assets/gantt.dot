@@ -1,0 +1,11 @@
+digraph Gantt {
+ graph [rankdir=TB, bgcolor=white, pad=.2]; node [fontname="DejaVu Sans",fontsize=10,shape=plaintext];
+ x[label=< <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" COLOR="#9CBCC3">
+ <TR><TD BGCOLOR="#075c66"><FONT COLOR="white"><B>Actividad / fecha planificada</B></FONT></TD><TD BGCOLOR="#075c66"><FONT COLOR="white"><B>05–07 oct</B></FONT></TD><TD BGCOLOR="#075c66"><FONT COLOR="white"><B>08–09 oct</B></FONT></TD><TD BGCOLOR="#075c66"><FONT COLOR="white"><B>10–12 oct</B></FONT></TD><TD BGCOLOR="#075c66"><FONT COLOR="white"><B>13–14 oct</B></FONT></TD></TR>
+ <TR><TD ALIGN="LEFT">Análisis LEC06 / LEC07 / PACT</TD><TD BGCOLOR="#67BDBB">●●●</TD><TD></TD><TD></TD><TD></TD></TR>
+ <TR><TD ALIGN="LEFT">Diseño y tres alternativas</TD><TD></TD><TD BGCOLOR="#67BDBB">●●</TD><TD></TD><TD></TD></TR>
+ <TR><TD ALIGN="LEFT">PWA y módulos de interacción</TD><TD></TD><TD BGCOLOR="#67BDBB">●</TD><TD BGCOLOR="#67BDBB">●●</TD><TD></TD></TR>
+ <TR><TD ALIGN="LEFT">Pruebas con casos ficticios</TD><TD></TD><TD></TD><TD BGCOLOR="#67BDBB">●</TD><TD></TD></TR>
+ <TR><TD ALIGN="LEFT">Documentación / GitHub / video</TD><TD></TD><TD></TD><TD></TD><TD BGCOLOR="#67BDBB">●●</TD></TR>
+ </TABLE>>];
+}

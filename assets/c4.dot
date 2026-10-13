@@ -1,0 +1,16 @@
+digraph C4 {
+  graph [rankdir=LR, bgcolor="white", pad=.2, nodesep=.38, ranksep=.55];
+  node [shape=box, style="rounded,filled", fillcolor="#EDF7F7", color="#43848D", fontname="DejaVu Sans", fontsize=10, margin="0.21,0.13"];
+  edge [color="#587C85", penwidth=1.2, fontname="DejaVu Sans", fontsize=9];
+  PAC [label="Paciente rural\n(caso ficticio)"];
+  MED [label="Rol médico\n(simulación)"];
+  PWA [label="PWA / Navegador\nvoz, texto, silueta, perfil",fillcolor="#C6EBE7"];
+  API [label="Servidor Node HTTP\n/api/cases · /api/llm"];
+  DATA [label="Archivo local JSON\ncasos sintéticos"];
+  LLM [label="Adaptador LLM\nGemini / simulación",fillcolor="#FFF1D7"];
+  PAC -> PWA [label="declara / confirma"];
+  MED -> PWA [label="abre código / responde"];
+  PWA -> API [label="solicitudes REST"];
+  API -> DATA [label="lectura / escritura"];
+  API -> LLM [label="resumen"];
+}

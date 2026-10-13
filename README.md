@@ -1,10 +1,8 @@
 # TriageVoz Rural — PC2 CC451 IHC
 
-**Proyecto académico** de pre-triaje asistido por voz y silueta corporal para postas de salud rurales, desarrollado a partir de LEC06 y LEC07.
+**Proyecto académico** de pre-triaje asistido por voz y silueta corporal para postas de salud rurales.
 
-**Autor:** César Omar López Arteaga · Universidad Nacional de Ingeniería · CC451 · 2026-II.
-
-> AVISO: Solo prototipo académico con datos ficticios. No constituye diagnóstico médico, no sugiere tratamientos, no hay clasificación clínica validada y no debe utilizarse con pacientes reales. El rol médico es simulado y carece de autenticación profesional.
+**Autores:** César Omar López Arteaga · Universidad Nacional de Ingeniería · CC451 · 2026-II.
 
 ## Instalación
 

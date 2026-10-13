@@ -1,5 +1,7 @@
 # Historias de usuario — derivadas de LEC06 y ampliadas para PC2
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 ## HU-01 · Inicio, idioma, accesibilidad y preferencias
 
 Como paciente, quiero configurar idioma, texto, contraste y voz para usar la interfaz según mis capacidades.

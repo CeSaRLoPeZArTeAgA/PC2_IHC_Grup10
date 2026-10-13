@@ -1,5 +1,7 @@
 # CC451 — PC2: entrega académica y evidencias
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 **Proyecto:** TriageVoz Rural — interfaz no convencional de apoyo al pre-triaje rural.  
 **Autor de este aporte:** César Omar López Arteaga.  
 **Base de diseño:** LEC06 (stakeholders, RF-01…RF-17, RNF-01…RNF-10, HU-01…HU-10) y LEC07 (CU-07-01-M y SCAMPER).  

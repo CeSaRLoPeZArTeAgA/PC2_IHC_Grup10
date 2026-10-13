@@ -1,5 +1,7 @@
 # Navegación e interacciones entre pantallas
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 ```mermaid
 flowchart TD
  A[Inicio y preferencias] --> B[Zona de molestia - voz/texto/silueta]

@@ -1,6 +1,8 @@
 # Mi aporte personal — PC2 CC451
 
-**César Omar López Arteaga · 20215508C · Grupo 10**
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
+**César Omar López Arteaga · 20236743A · Grupo 10**
 
 ## Aporte documentado en esta versión del repositorio
 

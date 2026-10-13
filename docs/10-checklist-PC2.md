@@ -1,5 +1,7 @@
 # Checklist PC2
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 | Rubro | Artefacto en repositorio | Estado |
 |---|---|---|
 | Stakeholders, inclusión de discapacidad | docs/01-informe-PC2.md | Documentado |

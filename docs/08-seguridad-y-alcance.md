@@ -1,5 +1,7 @@
 # Alcance y riesgos
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 - Prototipo de interacción, **no producto médico**.
 - Solo datos inventados; prohibido incorporar datos reales de pacientes.
 - No hay autenticación ni autorización sanitaria: el rol médico es una **simulación**.

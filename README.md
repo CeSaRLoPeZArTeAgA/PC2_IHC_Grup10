@@ -1,5 +1,7 @@
 # TriageVoz Rural — PC2 CC451 IHC
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 **Proyecto académico** de pre-triaje asistido por voz y silueta corporal para postas de salud rurales.
 
 **Autores:** César Omar López Arteaga · Universidad Nacional de Ingeniería · CC451 · 2026-II.

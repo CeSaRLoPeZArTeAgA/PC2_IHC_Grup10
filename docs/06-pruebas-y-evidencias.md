@@ -1,5 +1,7 @@
 # Plan de pruebas de la PWA
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 Probar con Node.js 20+ y un navegador Chromium o Edge.
 
 | ID | Prueba | Criterio esperado |

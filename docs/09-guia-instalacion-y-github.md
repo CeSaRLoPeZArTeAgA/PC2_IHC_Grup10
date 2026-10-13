@@ -1,5 +1,7 @@
 # Instalación y despliegue local
 
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+
 1. Instalar Node.js 20 o superior, VS Code y Chrome/Edge.
 2. Clonar: git clone https://github.com/CeSaRLoPeZArTeAgA/PC2_IHC_Grup10.git
 3. Entrar: cd PC2_IHC_Grup10

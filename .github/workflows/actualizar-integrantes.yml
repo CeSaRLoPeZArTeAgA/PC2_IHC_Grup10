@@ -1,0 +1,57 @@
+name: Actualizar integrantes PC2
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/actualizar_integrantes.py'
+      - '.github/workflows/actualizar-integrantes.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  documentos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Dependencias de edición
+        run: |
+          python -m pip install python-docx
+          if ! command -v libreoffice >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y libreoffice-writer
+          fi
+      - name: Actualizar DOCX DOC PDF y Markdown
+        run: python scripts/actualizar_integrantes.py
+      - name: Comprobar la presencia de los tres integrantes en el Word y PDF
+        run: |
+          python - <<'PY'
+          from docx import Document
+          from pathlib import Path
+          required = ["Santa Cruz Basilio, Jesus Diego", "López Arteaga, César Omar", "Pumayauli Evangelista, Bryan José"]
+          for filename in ("docs/01-informe-PC2.docx", "mi-aporte-cesar-lopez-arteaga.docx"):
+              d = Document(filename)
+              text = "\n".join(p.text for p in d.paragraphs)
+              assert all(person in text for person in required), filename
+          for filename in ("docs/01-informe-PC2.pdf", "mi-aporte-cesar-lopez-arteaga.doc"):
+              assert Path(filename).stat().st_size > 10000, filename
+          print("Validación de integrantes y binarios: OK")
+          PY
+          if command -v pdftotext >/dev/null 2>&1; then
+            pdftotext docs/01-informe-PC2.pdf - | grep -q 'Santa Cruz Basilio'
+            pdftotext docs/01-informe-PC2.pdf - | grep -q 'Pumayauli Evangelista'
+          fi
+      - name: Publicar archivos corregidos en main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md docs/ mi-aporte-cesar-lopez-arteaga.doc mi-aporte-cesar-lopez-arteaga.docx mi-aporte-cesar-lopez-arteaga.md
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: identificar a los tres integrantes del Grupo 10 en todos los entregables PC2"
+            git push
+          fi

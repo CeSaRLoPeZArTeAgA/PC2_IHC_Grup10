@@ -34,8 +34,12 @@ def update_report():
         elif p.text.startswith("Código: 20215508C"):
             set_paragraph(p, "\n".join(f"• {name} — {code}" for name, code in MEMBERS))
             changed += 1
-    if changed != 2:
-        raise RuntimeError(f"Portada del informe: se esperaban dos reemplazos; encontrados {changed}")
+    if changed not in (0, 2):
+        raise RuntimeError(f"Portada del informe: actualización parcial ({changed})")
+    for section in doc.sections:
+        for paragraph in section.footer.paragraphs:
+            if "César Omar López Arteaga" in paragraph.text:
+                paragraph.text = paragraph.text.replace("César Omar López Arteaga", "Grupo 10: Santa Cruz · López · Pumayauli")
     doc.core_properties.author = "Grupo 10: Santa Cruz Basilio; López Arteaga; Pumayauli Evangelista"
     doc.core_properties.title = "PC2 CC451 — TriageVoz Rural — Grupo 10"
     doc.save(REPORT)
@@ -43,11 +47,12 @@ def update_report():
 def update_personal():
     doc = Document(PERSONAL)
     ps = doc.paragraphs
-    if not ps[1].text.startswith("Estudiante:"):
-        raise RuntimeError("No se encontró identificación de estudiante en el aporte")
+    if not (ps[1].text.startswith("Estudiante:") or ps[1].text.startswith("Grupo 10")):
+        raise RuntimeError("No se encontró identificación de los integrantes en el aporte")
     set_paragraph(ps[1], "Grupo 10 — integrantes:")
     set_paragraph(ps[2], "\n".join(f"• {name} — {code}" for name, code in MEMBERS))
-    ps[3].insert_paragraph_before("Aporte personal registrado: López Arteaga, César Omar — 20236743A.")
+    if not any(p.text.startswith("Aporte personal registrado:") for p in ps):
+        ps[3].insert_paragraph_before("Aporte personal registrado: López Arteaga, César Omar — 20236743A.")
     for p in doc.paragraphs:
         p.text = p.text.replace("No se atribuyen contribuciones de integrantes del grupo no identificados.",
             "Los tres integrantes están identificados; el aporte individual descrito debe verificarse por el estudiante antes de la sustentación.")

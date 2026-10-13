@@ -1,0 +1,18 @@
+{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0 Arial;}}\paperw11906\paperh16838\margl1400\margr1400\margt1250\margb1250\fs22
+\b\fs26 Mi aporte personal - PC2 CC451\b0\par\par
+\b0\fs22 Proyecto: TriageVoz Rural - Pre-triaje en telemedicina\b0\par\par
+\b0\fs22 Apellidos y nombres: Lopez Arteaga, Cesar Omar\b0\par\par
+\b0\fs22 Codigo: 20215508C\b0\par\par
+\b0\fs22 Universidad Nacional de Ingenieria - 2026-II\b0\par\par
+\b\fs26 1. Analisis de usuarios y contexto\b0\par\par
+\b0\fs22 Estructure el analisis de stakeholders y PACT con pacientes rurales, adultos mayores, personas con discapacidades visuales, auditivas, motoras y cognitivas, personal de posta y medico remoto. Destaque adaptaciones de voz, texto y controles tactiles grandes.\b0\par\par
+\b\fs26 2. Requerimientos e historias de usuario\b0\par\par
+\b0\fs22 Consolide los RF-01 a RF-17, RNF-01 a RNF-10 y ampliaciones PC2 en una matriz de trazabilidad con historias, prioridades, criterios de aceptacion y estado real del prototipo.\b0\par\par
+\b\fs26 3. Alternativas de diseno y arquitectura\b0\par\par
+\b0\fs22 Describi tres alternativas A, B y C; seleccione el esquema multimodal integrado. Documente arquitectura C4, navegacion de pantallas y cronograma Gantt.\b0\par\par
+\b\fs26 4. Prototipo funcional\b0\par\par
+\b0\fs22 Prepare una demostracion PWA que admite seleccion de zona corporal, voz opcional, entrada de texto, confirmacion y resumen de sintomas ficticios, asi como transferencia local y rol medico simulado.\b0\par\par
+\b\fs26 5. Alcance y verificacion\b0\par\par
+\b0\fs22 Inclui datos inventados, pruebas basicas y un aviso constante: el prototipo no diagnostica, no ofrece orientacion clinica validada y no debe tratar datos personales reales. La autenticacion sanitaria y la validacion clinica estan pendientes.\b0\par\par
+\b0\fs22 Evidencias: README.md, docs/01-informe-PC2.md, docs/05-trazabilidad.csv, public/, server.mjs, tests/.\b0\par\par
+}

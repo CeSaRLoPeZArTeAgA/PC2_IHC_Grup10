@@ -1,0 +1,24 @@
+[
+  {
+    "alias": "Caso ficticio A",
+    "region": "Cabeza",
+    "answers": {
+      "motivo": "Molestia de cabeza simulada",
+      "inicio": "Hace dos horas",
+      "intensidad": "Moderada",
+      "adicionales": "Sin datos adicionales"
+    },
+    "priority": "Pendiente de valoración profesional"
+  },
+  {
+    "alias": "Caso ficticio B",
+    "region": "Brazo izquierdo",
+    "answers": {
+      "motivo": "Molestia de brazo simulada",
+      "inicio": "Esta mañana",
+      "intensidad": "Leve",
+      "adicionales": "Sin datos adicionales"
+    },
+    "priority": "Pendiente de valoración profesional"
+  }
+]

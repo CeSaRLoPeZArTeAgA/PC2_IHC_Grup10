@@ -1,0 +1,16 @@
+{
+  "name": "TriageVoz Rural – PWA académica",
+  "short_name": "TriageVoz",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f8fa",
+  "theme_color": "#006c83",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

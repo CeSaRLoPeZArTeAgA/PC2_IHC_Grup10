@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {localSummary,handler} from '../server.mjs';import http from 'node:http';
+test('Resumen de demostración no es diagnóstico',()=>{const r=localSummary({region:'Cabeza',answers:{motivo:'Molestia de prueba'}});assert.equal(r.mode,'simulacion');assert.match(r.disclaimer,/diagnóstico/);assert.match(r.summary,/Cabeza/)});
+test('API local crea, consulta, acusa recepción y responde con datos ficticios',async()=>{const s=http.createServer(handler);await new Promise(ok=>s.listen(0,'127.0.0.1',ok));const url='http://127.0.0.1:'+s.address().port;
+try{const h=await(await fetch(url+'/api/health')).json();assert.equal(h.ok,true);
+const invalid=await fetch(url+'/api/cases',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});assert.equal(invalid.status,422);
+const created=await(await fetch(url+'/api/cases',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({alias:'Persona ficticia',region:'Brazo izquierdo',answers:{motivo:'Prueba'},summary:'Relato ficticio'})})).json();assert.equal(created.status,'enviado');assert.ok(created.code);
+const ack=await(await fetch(url+'/api/cases/ack',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({code:created.code})})).json();assert.equal(ack.status,'recibido');
+const rep=await(await fetch(url+'/api/cases/reply',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({code:created.code,message:'Respuesta simulada'})})).json();assert.equal(rep.replies.length,1);
+const find=await(await fetch(url+'/api/cases/by-code?code='+created.code)).json();assert.equal(find.code,created.code);
+}finally{await new Promise(ok=>s.close(ok))}});

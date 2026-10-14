@@ -54,3 +54,7 @@ El servidor solo escucha en 127.0.0.1. Los códigos de caso y la simulación de 
 El rol médico es una **simulación multirol en localhost**, no teleconsulta en tiempo real. Para los cambios después de la integración de Bryan Pumayauli y Jesus Santa Cruz, consultar [anexo técnico](docs/14-anexo-version-actual.md), [pruebas](docs/06-pruebas-y-evidencias.md) y [arquitectura C4](docs/02-arquitectura-C4.md).
 
 La presentación grupal editable se encuentra en `presentacion/PC2-TriageVoz-Rural-Grupo10.pptx`, generada a partir de `scripts/generar_presentacion.cjs`. Se utiliza material ficticio; las capturas anteriores siguen archivadas como evidencia histórica y deben actualizarse para mostrar el código final.
+
+## Evidencias automatizadas de funcionamiento
+
+Se ejecutó un recorrido E2E real con Chromium en GitHub Actions. Consulta el [registro de pruebas y cinco capturas PNG](docs/15-evidencias-e2e.md) y su [script de reproducción](scripts/capturar_evidencias_e2e.mjs). El caso E2E utiliza datos ficticios y es diferente de la sesión manual del equipo. No constituye validación clínica.

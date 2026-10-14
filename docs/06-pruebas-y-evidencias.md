@@ -38,7 +38,7 @@ Las pruebas automatizadas se ejecutan con Node.js 22 en GitHub Actions. El regis
 
 ## Evidencias visuales
 
-Las capturas previamente publicadas se encuentran en `assets/01` a `assets/08`; reflejan versiones anteriores del prototipo. Deben actualizarse con **capturas nuevas tomadas del software ejecutándose** para acreditar la bandeja de casos revisada, el historial y la recuperación tras recarga. No se generan ni presentan capturas sintéticas como prueba de funcionamiento.
+Las capturas anteriores continúan en `assets/01` a `assets/08` como registro histórico. Se han incorporado **cinco capturas reales de Chromium ejecutando el prototipo en GitHub Actions**, disponibles en [Evidencias E2E actualizadas](15-evidencias-e2e.md) y `assets/evidencias-integracion/`. La ejecución verifica: creación y envío, bandeja, acuse e historial, respuesta al paciente y recuperación tras recarga. Estas capturas se produjeron en CI, en una sesión distinta de las pruebas manuales del equipo. No se consideran evidencia de validación clínica.
 
 ## Límites
 

@@ -124,6 +124,7 @@ $('actDismiss').onclick=()=>{
 let questionStartTime=0,questionTimer=null;
 
 function show(n){
+  if(n!==3)clearTimeout(questionTimer);
   step=n;
   for(let i=0;i<6;i++)$('p'+i).hidden=i!==n;
   $('stage').textContent=n===5?'Estado de envío':('Paso '+(Math.min(n+1,5))+' de 5');
@@ -163,10 +164,11 @@ function dictate(target){
   if(!SR){alert('Este navegador no dispone de dictado. Puedes escribir sin perder información.');return;}
   let r=new SR();
   r.lang='es-PE';
-  r.interimResults=true;
+  r.interimResults=false;
   r.onresult=e=>{
-    const transcript=Array.from(e.results).map(res=>res[0].transcript).join('');
-    target.value=transcript;
+    const transcript=Array.from(e.results).filter(res=>res.isFinal).map(res=>res[0].transcript).join(' ').trim();
+    if(!transcript)return;
+    target.value=[target.value.trim(),transcript].filter(Boolean).join(' ');
     target.dispatchEvent(new Event('input'));
   };
   r.onerror=()=>{
@@ -278,10 +280,28 @@ $('edit').onclick=()=>{
   $('result').hidden=true;
   show(3);
 };
-$('send').onclick=async()=>{if(!session.summary)return;try{sent=await jsonPost('/api/cases',session);$('code').textContent='SALA-'+sent.code;$('delivery').textContent='Sala colaborativa de teleconsulta creada y compartida en el servidor.';$('receipt').textContent='🟡 Estado: Sala abierta en espera de que el médico remoto se una y confirme recepción.';$('result').hidden=true;show(5)}catch(e){$('delivery').textContent='Pendiente de envío: '+e.message;localStorage.setItem('triagevoz_borrador_ficticio',JSON.stringify(session));alert('No hay conexión. Se conserva el borrador de demostración en este navegador; no se marcará como recibido.')}};
+$('send').onclick=async()=>{
+  if(!session.summary)return;
+  const button=$('send');
+  if(button.disabled)return;
+  button.disabled=true;
+  try{
+    sent=await jsonPost('/api/cases',session);
+    localStorage.setItem('triagevoz_ultimo_caso_demo',sent.code);
+    localStorage.removeItem('triagevoz_borrador_ficticio');
+    $('code').textContent='SALA-'+sent.code;
+    $('delivery').textContent='Caso ficticio almacenado en el servidor local.';
+    $('receipt').textContent='Estado: enviado. Pendiente de confirmación del rol médico simulado.';
+    $('result').hidden=true;show(5);
+  }catch(e){
+    $('delivery').textContent='Pendiente de envío: '+e.message;
+    localStorage.setItem('triagevoz_borrador_ficticio',JSON.stringify(session));
+    alert('No fue posible enviar. Se conserva el borrador ficticio en este navegador; no se marcará como recibido.');
+  }finally{button.disabled=false}
+};
 async function refresh(){if(!sent)return;try{sent=await api('/api/cases/by-code?code='+encodeURIComponent(sent.code));$('receipt').textContent=sent.status==='recibido'?'🟢 Estado verificado: El médico remoto se ha unido a la sala y confirmó la recepción.':'🟡 Estado: Sala enviada, pendiente de acuse del médico remoto.';$('doctorResponse').replaceChildren();for(const r of sent.replies){const p=document.createElement('p');p.className='confirm';p.textContent=r.author+': '+r.message;$('doctorResponse').append(p)}}catch(e){$('receipt').textContent='No es posible comprobar recepción: '+e.message}}
-$('refresh').onclick=refresh;$('restart').onclick=()=>{session={alias:'Paciente de prueba',region:'',answers:{motivo:'',inicio:'',intensidad:'',adicionales:''},summary:'',priority:''};sent=null;$('region').value='';$('result').hidden=true;show(0)};
-let doctorCase=null;function docRender(c){if(doctorCase&&doctorCase.code!==c.code)$('message').value='';doctorCase=c;$('caseView').hidden=false;$('caseTitle').textContent='Sala SALA-'+c.code+' · '+c.alias;details($('caseDetails'),[['Zona',c.region],['Relato',c.answers.motivo],['Inicio',c.answers.inicio],['Intensidad',c.answers.intensidad],['Adicionales',c.answers.adicionales],['Resumen generado',c.summary]]);$('caseState').textContent='Estado confirmado por servidor: '+c.status;$('ack').disabled=c.status==='recibido';$('replyState').textContent='Respuestas registradas: '+c.replies.length;
+$('refresh').onclick=refresh;$('restart').onclick=()=>{localStorage.removeItem('triagevoz_ultimo_caso_demo');session={alias:'Paciente de prueba',region:'',answers:{motivo:'',inicio:'',intensidad:'',adicionales:''},summary:'',priority:''};sent=null;$('region').value='';$('doctorResponse').replaceChildren();$('result').hidden=true;show(0)};
+let doctorCase=null;function docRender(c){if(doctorCase&&doctorCase.code!==c.code)$('message').value='';doctorCase=c;$('caseView').hidden=false;$('caseTitle').textContent='Caso SALA-'+c.code+' · '+c.alias;details($('caseDetails'),[['Zona',c.region],['Relato',c.answers.motivo],['Inicio',c.answers.inicio],['Intensidad',c.answers.intensidad],['Adicionales',c.answers.adicionales],['Resumen generado',c.summary]]);$('caseState').textContent='Estado confirmado por servidor: '+c.status;$('ack').disabled=c.status==='recibido';$('replyState').textContent='Respuestas registradas: '+c.replies.length;
 const history=$('replyHistory');
 history.replaceChildren();
 for(const response of c.replies){
@@ -304,7 +324,7 @@ async function loadRooms(){
   if(!rooms.length){
    const empty=document.createElement('p');
    empty.className='helper';
-   empty.textContent='No hay salas activas en este momento. Al enviar un pre-triaje se creará una nueva sala.';
+   empty.textContent='No hay casos simulados para mostrar. Al enviar un pre-triaje aparecerá en esta bandeja.';
    listContainer.append(empty);
    return;
   }
@@ -316,17 +336,17 @@ async function loadRooms(){
    head.className='room-card-head';
    const alias=document.createElement('span');
    alias.className='room-alias';
-   alias.textContent=r.alias||'Sala de paciente';
+   alias.textContent=r.alias||'Paciente de demostración';
    const badge=document.createElement('span');
    badge.className='room-badge '+(r.status==='recibido'?'recibido':'enviado');
-   badge.textContent=r.status==='recibido'?'🟢 Recibido / Atendido':'🟡 En espera de médico';
+   badge.textContent=r.status==='recibido'?'Recibido (acuse registrado)':'Enviado (pendiente de acuse)';
    head.append(alias,badge);
    const details=document.createElement('div');
    details.className='room-details';
    details.textContent='Zona: '+(r.region||'No especificada')+' · '+(r.motivo?r.motivo.slice(0,55):'Pre-triaje general');
    const code=document.createElement('div');
    code.className='room-code';
-   code.textContent='SALA-'+r.code+' · '+(r.repliesCount?r.repliesCount+' respuesta(s)':'Sin respuesta');
+   code.textContent='Caso SALA-'+r.code+' · '+(r.repliesCount?r.repliesCount+' respuesta(s)':'Sin respuesta');
    card.append(head,details,code);
    card.onclick=()=>{
     $('lookupCode').value=r.code;
@@ -363,4 +383,16 @@ $('reply').onclick=async()=>{
  }catch(e){$('doctorErr').textContent=e.message}
  finally{button.disabled=false}
 };
+// Recuperación del último caso de prueba tras recargar el navegador.
+try{
+ const previous=localStorage.getItem('triagevoz_ultimo_caso_demo');
+ if(previous)api('/api/cases/by-code?code='+encodeURIComponent(previous)).then(c=>{
+   if(sent)return;
+   sent=c;
+   $('code').textContent='SALA-'+c.code;
+   $('delivery').textContent='Caso ficticio recuperado del servidor local.';
+   show(5);
+   refresh();
+ }).catch(()=>localStorage.removeItem('triagevoz_ultimo_caso_demo'));
+}catch{}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}

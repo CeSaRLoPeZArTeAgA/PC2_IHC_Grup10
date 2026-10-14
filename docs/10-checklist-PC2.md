@@ -16,9 +16,14 @@
 | Navegación entre pantallas | docs/03-flujo-pantallas.md | Documentado |
 | PWA voz + silueta + LLM opcional | public/, server.mjs | Demo local |
 | Personalización persistente | public/app.js | Parcial |
-| Colaboración multiusuario | server.mjs, public/app.js | Implementado: salas de teleconsulta colaborativas y bandeja interactiva |
+| Interacción multirol local | server.mjs, public/app.js | Demostrada: bandeja de casos ficticios; NO videollamada ni usuarios remotos autenticados |
 | Datos simulados | data/casos-ficticios.json | Incluido |
 | Licencia Open Source | LICENSE | Incluido |
-| Aporte personal | mi-aporte-cesar-lopez-arteaga.md | Incluido |
-| Informe Word/PDF, captura originales | ZIP PC2 entregado aparte | **No incorporados a este commit** |
+| Aportes personales | mi-aporte-cesar-lopez-arteaga.md y mi-aporte-jesus-santa-cruz.md | Dos aportes disponibles; falta aporte de Bryan si lo exige el curso |
+| Informe Word/PDF y capturas históricas | docs/01-informe-PC2.docx, docs/01-informe-PC2.pdf, assets/ | Incorporados; actualizaciones del software descritas en anexo técnico |
 | Video de sustentación | Guía en docs/07-guia-sustentacion.md | **Pendiente de grabación** |
+
+| Anexo de cambios de integración | docs/14-anexo-version-actual.md (DOCX/PDF generados) | Actualizado; comprobar generación y enlaces |
+| Presentación grupal | presentacion/PC2-TriageVoz-Rural-Grupo10.pptx y .pdf | Generadas: 10 diapositivas |
+| Pruebas de concurrencia e idempotencia | tests/revision-integracion.test.mjs | 12/12 pruebas aprobadas en integración |
+| Capturas actuales y video de presentación | assets/ (histórico), video no adjunto | **Pendiente** |

@@ -22,7 +22,7 @@ Requiere **Node.js 20 o superior**.
 3. Confirmar explícitamente la región corporal y responder las preguntas de entrevista.
 4. Revisar la información, generar resumen de datos declarados y enviar caso ficticio.
 5. Copiar el código de caso, abrir el rol «Médico remoto (demo)», consultar caso, confirmar recepción y responder.
-6. Volver al paciente y comprobar el estado de recepción.
+6. Volver al paciente y comprobar el estado de recepción.\n7. En el rol médico se muestra la **bandeja de los últimos casos ficticios** (enviados y recibidos). Puede abrirlos sin copiar el código. No es una videollamada ni una sesión en tiempo real.
 
 La voz usa Web Speech API cuando el navegador es compatible. La alternativa textual siempre está disponible; puede operar sin permisos de micrófono. Las preferencias de accesibilidad se conservan localmente. Los casos ficticios persisten en JSON en el equipo.
 
@@ -39,7 +39,7 @@ Sin clave se muestra un resumen **determinista simulado**. El modelo objetivo me
 - `server.mjs`: servidor Node y API simulada de casos.
 - `public/`: PWA, estilos y tres propuestas de interfaz.
 - `docs/`: PACT, stakeholders, historias, trazabilidad, C4, Gantt, navegación, criterios y límites.
-- `tests/`: pruebas automáticas básicas.
+- `tests/`: pruebas funcionales y de integración (incluyen escrituras concurrentes y reintentos).
 - `data/`: datos ficticios para demostración.
 - `LICENSE`: MIT.
 
@@ -48,3 +48,9 @@ Sin clave se muestra un resumen **determinista simulado**. El modelo objetivo me
 ## Seguridad
 
 El servidor solo escucha en 127.0.0.1. Los códigos de caso y la simulación de roles NO constituyen autenticación ni autorización clínica. No cargar nombres, imágenes, síntomas ni historiales de personas reales.
+
+## Estado de integración y evidencias vigentes
+
+El rol médico es una **simulación multirol en localhost**, no teleconsulta en tiempo real. Para los cambios después de la integración de Bryan Pumayauli y Jesus Santa Cruz, consultar [anexo técnico](docs/14-anexo-version-actual.md), [pruebas](docs/06-pruebas-y-evidencias.md) y [arquitectura C4](docs/02-arquitectura-C4.md).
+
+La presentación grupal editable se encuentra en `presentacion/PC2-TriageVoz-Rural-Grupo10.pptx`, generada a partir de `scripts/generar_presentacion.cjs`. Se utiliza material ficticio; las capturas anteriores siguen archivadas como evidencia histórica y deben actualizarse para mostrar el código final.

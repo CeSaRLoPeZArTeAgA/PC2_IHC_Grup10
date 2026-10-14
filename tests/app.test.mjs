@@ -1,4 +1,8 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {localSummary,handler} from '../server.mjs';import http from 'node:http';
+import test,{after} from 'node:test';import assert from 'node:assert/strict';import http from 'node:http';import fs from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import crypto from 'node:crypto';
+const runtimeTest=path.join(os.tmpdir(),'triagevoz-tests-main-'+crypto.randomUUID()+'.json');
+process.env.STORAGE_FILE=runtimeTest;
+const {localSummary,handler}=await import('../server.mjs');
+after(async()=>{await fs.rm(runtimeTest,{force:true})});
 test('Resumen de demostración no es diagnóstico',()=>{const r=localSummary({region:'Cabeza',answers:{motivo:'Molestia de prueba'}});assert.equal(r.mode,'simulacion');assert.match(r.disclaimer,/diagnóstico/);assert.match(r.summary,/Cabeza/)});
 test('API local crea, consulta, acusa recepción y responde con datos ficticios',async()=>{const s=http.createServer(handler);await new Promise(ok=>s.listen(0,'127.0.0.1',ok));const url='http://127.0.0.1:'+s.address().port;
 try{const h=await(await fetch(url+'/api/health')).json();assert.equal(h.ok,true);
@@ -62,7 +66,7 @@ test('Multiusuario: salas de teleconsulta colaborativas y bandeja de salas activ
  const js=await fs.readFile(new URL('../public/app.js',import.meta.url),'utf8');
  assert.match(html,/id="roomList"/);
  assert.match(html,/id="refreshRooms"/);
- assert.match(html,/Salas de teleconsulta rural/);
+ assert.match(html,/Bandeja de casos simulados/);
  assert.match(js,/async function loadRooms/);
  assert.match(js,/\/api\/rooms/);
  assert.match(js,/SALA-/);

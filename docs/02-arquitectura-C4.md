@@ -1,6 +1,6 @@
 # Arquitectura C4 — TriageVoz Rural, versión PC2 revisada
 
-> **Integrantes, Grupo 10:** Santa Cruz Basilio, Jesus Diego (20235005G); López Arteaga, César Omar (20236743A); Pumayauli Evangelista, Bryan José (20212209E).
+> **Integrantes, Grupo 10:** Santa Cruz Basilio, Jesus Diego (20235005G); López Arteaga, César Omar (20215508C); Pumayauli Evangelista, Bryan José (20212209E).
 
 ## C1 — Contexto del sistema
 

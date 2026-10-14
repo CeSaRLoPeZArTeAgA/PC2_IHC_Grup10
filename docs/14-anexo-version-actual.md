@@ -1,6 +1,6 @@
 # Anexo técnico de integración — actualización de la PC2
 
-> **Grupo 10 UNI:** Santa Cruz Basilio, Jesus Diego — 20235005G; López Arteaga, César Omar — 20236743A; Pumayauli Evangelista, Bryan José — 20212209E.
+> **Grupo 10 UNI:** Santa Cruz Basilio, Jesus Diego — 20235005G; López Arteaga, César Omar — 20215508C; Pumayauli Evangelista, Bryan José — 20212209E.
 
 ## Alcance del anexo
 

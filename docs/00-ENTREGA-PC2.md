@@ -1,6 +1,6 @@
 # CC451 — PC2: entrega académica y evidencias
 
-> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20215508C | Pumayauli Evangelista, Bryan José — 20212209E.
 
 **Proyecto:** TriageVoz Rural — interfaz no convencional de apoyo al pre-triaje rural.  
 **Integrantes del trabajo grupal:** Santa Cruz Basilio, Jesus Diego; López Arteaga, César Omar; Pumayauli Evangelista, Bryan José. Los aportes personales se documentan separadamente.  
@@ -75,7 +75,7 @@ Instalación de demostración: ejecutar `npm start` con Node.js 20+ y visitar `h
 - [Presentación grupal de sustentación](../presentacion/PC2-TriageVoz-Rural-Grupo10.pptx): editable, generada desde el script del repositorio.
 - [Fuente reproducible de presentación](../scripts/generar_presentacion.cjs).
 
-**Vigencia:** Los informes Word/PDF y capturas originales son antecedentes documentales; las nuevas funcionalidades se documentan en el anexo de integración. El registro de screenshots de la interfaz final y el video siguen pendientes de captura y grabación por los integrantes; no se declaran como evidencia disponible antes de realizarlos.
+**Vigencia:** Los informes Word/PDF y capturas originales son antecedentes documentales; las nuevas funcionalidades se documentan en el anexo de integración. Las cinco capturas E2E del funcionamiento actual están publicadas y verificadas en GitHub Actions; el video de sustentación individual sigue pendiente.
 
 ## 7. Capturas E2E reproducibles de la versión integrada
 

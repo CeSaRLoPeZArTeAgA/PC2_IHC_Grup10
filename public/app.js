@@ -6,7 +6,22 @@ const questions=[
 ['¿Qué intensidad tiene la molestia?','¿Es leve, moderada o muy fuerte? Es una percepción personal.'],
 ['¿Notas alguna otra molestia?','¿Hay algo más que quieras contar? Si no, escribe "no".']];
 let session={alias:'Paciente de prueba',region:'',answers:{motivo:'',inicio:'',intensidad:'',adicionales:''},summary:'',priority:''},question=0,step=0,sent=null;
-const zones=['Cabeza','Tórax','Abdomen','Espalda','Brazo izquierdo','Brazo derecho','Pierna izquierda','Pierna derecha','Otra zona'];
+const zones=['Cabeza','Tórax','Abdomen','Espalda alta','Espalda baja (lumbar)','Nuca','Glúteos','Brazo izquierdo','Brazo derecho','Pierna izquierda','Pierna derecha','Otra zona'];
+let currentView='front';
+function switchView(view,auto=false){
+currentView=view;
+const isFront=view==='front';
+if($('tabFront'))$('tabFront').classList.toggle('active',isFront);
+if($('tabBack'))$('tabBack').classList.toggle('active',!isFront);
+if($('tabFront'))$('tabFront').setAttribute('aria-selected',isFront?'true':'false');
+if($('tabBack'))$('tabBack').setAttribute('aria-selected',!isFront?'true':'false');
+if($('frontView'))$('frontView').hidden=!isFront;
+if($('backView'))$('backView').hidden=isFront;
+if($('viewHint'))$('viewHint').textContent=(isFront?'Vista anterior (frente)':'Vista posterior (espalda)')+' · Toca una zona';
+if(!auto)msg(isFront?'Mostrando vista frontal del cuerpo':'Mostrando vista posterior, espalda');
+}
+if($('tabFront'))$('tabFront').onclick=()=>switchView('front');
+if($('tabBack'))$('tabBack').onclick=()=>switchView('back');
 function savePrefs(){localStorage.setItem('triagevoz_prefs_demo',JSON.stringify({language:$('language').value,contrast:$('contrast').checked,large:$('large').checked,speak:$('speak').checked}));document.body.classList.toggle('high',$('contrast').checked);document.body.classList.toggle('large',$('large').checked)}
 try{const x=JSON.parse(localStorage.getItem('triagevoz_prefs_demo')||'{}');$('language').value=x.language||'es';$('contrast').checked=!!x.contrast;$('large').checked=!!x.large;$('speak').checked=!!x.speak}catch{}savePrefs();
 ['language','contrast','large','speak'].forEach(k=>$(k).addEventListener('change',savePrefs));
@@ -14,9 +29,32 @@ function msg(s){if($('speak').checked&&'speechSynthesis'in window){speechSynthes
 function show(n){step=n;for(let i=0;i<6;i++)$('p'+i).hidden=i!==n;$('stage').textContent=n===5?'Estado de envío':('Paso '+(Math.min(n+1,5))+' de 5');if(n===3)renderQuestion();if(n===4)renderReview()}
 function patientTab(active){$('patient').hidden=!active;$('doctor').hidden=active;$('patientTab').classList.toggle('active',active);$('doctorTab').classList.toggle('active',!active);}
 $('patientTab').onclick=()=>patientTab(true);$('doctorTab').onclick=()=>patientTab(false);
-zones.forEach(z=>{const b=document.createElement('button');b.type='button';b.textContent=z;b.onclick=()=>{$('region').value=z;session.region=z;paintZone()};$('zones').append(b)});
-function paintZone(){const region=$('region').value.trim();$('zoneHint').textContent=region?'Región declarada: '+region:'Falta seleccionar una región.';Array.from($('zones').children).forEach(b=>b.classList.toggle('selected',b.textContent===region));}
+zones.forEach(z=>{const b=document.createElement('button');b.type='button';b.textContent=z;b.onclick=()=>{$('region').value=z;session.region=z;paintZone();msg('Seleccionaste '+z)};$('zones').append(b)});
+function paintZone(){
+const region=$('region').value.trim();
+$('zoneHint').textContent=region?'Región declarada: '+region:'Falta seleccionar una región.';
+const lower=region.toLowerCase();
+const isBackKeyword=lower.includes('espalda')||lower.includes('lumbar')||lower.includes('nuca')||lower.includes('glúteo')||lower.includes('gluteo')||lower.includes('cintura')||lower.includes('omoplato');
+const isFrontKeyword=lower.includes('tórax')||lower.includes('torax')||lower.includes('pecho')||lower.includes('abdomen')||lower.includes('vientre')||lower.includes('barriga');
+if(isBackKeyword&&currentView!=='back')switchView('back',true);
+else if(isFrontKeyword&&currentView!=='front')switchView('front',true);
+Array.from($('zones').children).forEach(b=>{
+const bLower=b.textContent.toLowerCase();
+const isSel=(bLower===lower)||(lower==='espalda'&&bLower.includes('espalda'));
+b.classList.toggle('selected',isSel);
+});
+document.querySelectorAll('.body-part').forEach(p=>{
+const pZone=(p.dataset.zone||'').toLowerCase();
+const isSel=(pZone===lower)||(lower==='espalda'&&pZone.includes('espalda'));
+p.classList.toggle('selected',isSel);
+});
+}
 $('region').oninput=paintZone;
+document.querySelectorAll('.body-part').forEach(part=>{
+const select=()=>{const z=part.dataset.zone;if(!z)return;$('region').value=z;session.region=z;paintZone();msg('Seleccionaste '+z)};
+part.onclick=select;
+part.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select()}};
+});
 function dictate(target){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Este navegador no dispone de dictado. Puedes escribir sin perder información.');return;}let r=new SR();r.lang='es-PE';r.interimResults=false;r.onresult=e=>{target.value=(target.value?target.value+' ':'')+e.results[0][0].transcript;target.dispatchEvent(new Event('input'))};r.onerror=()=>alert('El dictado no fue reconocido. Puedes continuar por escrito.');try{r.start()}catch{alert('No fue posible iniciar el micrófono. Usa el teclado.')}}
 document.querySelectorAll('[data-saytarget]').forEach(b=>b.onclick=()=>dictate($(b.dataset.saytarget)));
 $('begin').onclick=()=>{session.alias=$('alias').value.trim().slice(0,35)||'Paciente de prueba';show(1);msg('Puedes tocar o escribir dónde sientes la molestia.')};

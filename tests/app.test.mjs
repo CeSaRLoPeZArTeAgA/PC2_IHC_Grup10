@@ -18,3 +18,16 @@ test('Interfaz principal sin banner ni pie académico y con límites de IA visib
  assert.match(main,/La IA no emite un diagnóstico/);
  assert.match(main,/No existe clasificación clínica validada/);
 });
+test('Personalización continua: perfil adaptativo con ritmo y manejo de errores',async()=>{
+ const fs=await import('node:fs/promises');
+ const html=await fs.readFile(new URL('../public/index.html',import.meta.url),'utf8');
+ assert.match(html,/id="profileCard"/);
+ assert.match(html,/id="profRhythm"/);
+ assert.match(html,/id="profErrors"/);
+ assert.match(html,/id="adaptiveBanner"/);
+ assert.match(html,/id="rhythmHint"/);
+ const js=await fs.readFile(new URL('../public/app.js',import.meta.url),'utf8');
+ assert.match(js,/userProfile/);
+ assert.match(js,/recordCorrection/);
+ assert.match(js,/questionTimer/);
+});

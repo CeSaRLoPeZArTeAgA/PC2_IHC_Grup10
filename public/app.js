@@ -7,33 +7,240 @@ const questions=[
 ['¿Notas alguna otra molestia?','¿Hay algo más que quieras contar? Si no, escribe "no".']];
 let session={alias:'Paciente de prueba',region:'',answers:{motivo:'',inicio:'',intensidad:'',adicionales:''},summary:'',priority:''},question=0,step=0,sent=null;
 const zones=['Cabeza','Tórax','Abdomen','Espalda','Brazo izquierdo','Brazo derecho','Pierna izquierda','Pierna derecha','Otra zona'];
-function savePrefs(){localStorage.setItem('triagevoz_prefs_demo',JSON.stringify({language:$('language').value,contrast:$('contrast').checked,large:$('large').checked,speak:$('speak').checked}));document.body.classList.toggle('high',$('contrast').checked);document.body.classList.toggle('large',$('large').checked)}
-try{const x=JSON.parse(localStorage.getItem('triagevoz_prefs_demo')||'{}');$('language').value=x.language||'es';$('contrast').checked=!!x.contrast;$('large').checked=!!x.large;$('speak').checked=!!x.speak}catch{}savePrefs();
-['language','contrast','large','speak'].forEach(k=>$(k).addEventListener('change',savePrefs));
-function msg(s){if($('speak').checked&&'speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s);u.lang='es-PE';speechSynthesis.speak(u)}}
-function show(n){step=n;for(let i=0;i<6;i++)$('p'+i).hidden=i!==n;$('stage').textContent=n===5?'Estado de envío':('Paso '+(Math.min(n+1,5))+' de 5');if(n===3)renderQuestion();if(n===4)renderReview()}
+
+// Personalización continua: persistencia de preferencias, ritmo (>10s) y errores (umbral >=2)
+let userProfile={
+  language:'es',
+  contrast:false,
+  large:false,
+  speak:false,
+  rhythm:'normal',
+  avgTimePerQuestion:0,
+  questionTimes:[],
+  errorCount:0,
+  proactiveOffered:false
+};
+
+function saveProfile(){
+  userProfile.language=$('language').value;
+  userProfile.contrast=$('contrast').checked;
+  userProfile.large=$('large').checked;
+  userProfile.speak=$('speak').checked;
+  document.body.classList.toggle('high',userProfile.contrast);
+  document.body.classList.toggle('large',userProfile.large);
+  localStorage.setItem('triagevoz_user_profile',JSON.stringify(userProfile));
+  localStorage.setItem('triagevoz_prefs_demo',JSON.stringify({
+    language:userProfile.language,
+    contrast:userProfile.contrast,
+    large:userProfile.large,
+    speak:userProfile.speak
+  }));
+  updateProfileUI();
+}
+
+function updateProfileUI(){
+  const rEl=$('profRhythm'),eEl=$('profErrors'),aEl=$('profAdaptation');
+  if(rEl)rEl.textContent=userProfile.rhythm==='pausado'?'Ritmo: Pausado (>10s) · Voz lenta':'Ritmo: Normal (≤10s)';
+  if(eEl)eEl.textContent='Correcciones: '+userProfile.errorCount;
+  if(aEl){
+    if(userProfile.errorCount>=2)aEl.textContent='Asistencia adaptativa activada';
+    else if(userProfile.rhythm==='pausado')aEl.textContent='Modo paciente activo';
+    else aEl.textContent='Modo estándar';
+  }
+}
+
+try{
+  const saved=JSON.parse(localStorage.getItem('triagevoz_user_profile')||localStorage.getItem('triagevoz_prefs_demo')||'{}');
+  userProfile={...userProfile,...saved};
+  $('language').value=userProfile.language||'es';
+  $('contrast').checked=!!userProfile.contrast;
+  $('large').checked=!!userProfile.large;
+  $('speak').checked=!!userProfile.speak;
+}catch{}
+saveProfile();
+
+['language','contrast','large','speak'].forEach(k=>$(k).addEventListener('change',saveProfile));
+
+function msg(s){
+  if(userProfile.speak&&'speechSynthesis'in window){
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(s);
+    u.lang='es-PE';
+    // Adaptación del ritmo de habla: si el ritmo detectado es pausado (>10s), hablar más lento
+    u.rate=userProfile.rhythm==='pausado'?0.82:1.0;
+    speechSynthesis.speak(u);
+  }
+}
+
+function recordCorrection(reason){
+  userProfile.errorCount=(userProfile.errorCount||0)+1;
+  saveProfile();
+  if(userProfile.errorCount>=2&&!userProfile.proactiveOffered){
+    userProfile.proactiveOffered=true;
+    const b=$('adaptiveBanner');
+    if(b)b.hidden=false;
+    msg('Hemos notado varias correcciones. Puedes activar ayudas de lectura o letra más grande.');
+  }
+}
+
+$('actEnableVoice').onclick=()=>{
+  $('speak').checked=true;
+  userProfile.speak=true;
+  saveProfile();
+  $('adaptiveBanner').hidden=true;
+  msg('Lectura por voz activada.');
+};
+$('actLargeText').onclick=()=>{
+  $('large').checked=true;
+  userProfile.large=true;
+  saveProfile();
+  $('adaptiveBanner').hidden=true;
+};
+$('actSimplify').onclick=()=>{
+  if(step===3){
+    $('questionLabel').textContent=questions[question][1];
+    msg(questions[question][1]);
+  }
+  $('adaptiveBanner').hidden=true;
+};
+$('actDismiss').onclick=()=>{
+  $('adaptiveBanner').hidden=true;
+};
+
+let questionStartTime=0,questionTimer=null;
+
+function show(n){
+  step=n;
+  for(let i=0;i<6;i++)$('p'+i).hidden=i!==n;
+  $('stage').textContent=n===5?'Estado de envío':('Paso '+(Math.min(n+1,5))+' de 5');
+  if(n===3)renderQuestion();
+  if(n===4)renderReview();
+}
 function patientTab(active){$('patient').hidden=!active;$('doctor').hidden=active;$('patientTab').classList.toggle('active',active);$('doctorTab').classList.toggle('active',!active);}
 $('patientTab').onclick=()=>patientTab(true);$('doctorTab').onclick=()=>patientTab(false);
 zones.forEach(z=>{const b=document.createElement('button');b.type='button';b.textContent=z;b.onclick=()=>{$('region').value=z;session.region=z;paintZone()};$('zones').append(b)});
 function paintZone(){const region=$('region').value.trim();$('zoneHint').textContent=region?'Región declarada: '+region:'Falta seleccionar una región.';Array.from($('zones').children).forEach(b=>b.classList.toggle('selected',b.textContent===region));}
 $('region').oninput=paintZone;
-function dictate(target){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Este navegador no dispone de dictado. Puedes escribir sin perder información.');return;}let r=new SR();r.lang='es-PE';r.interimResults=false;r.onresult=e=>{target.value=(target.value?target.value+' ':'')+e.results[0][0].transcript;target.dispatchEvent(new Event('input'))};r.onerror=()=>alert('El dictado no fue reconocido. Puedes continuar por escrito.');try{r.start()}catch{alert('No fue posible iniciar el micrófono. Usa el teclado.')}}
+function dictate(target){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Este navegador no dispone de dictado. Puedes escribir sin perder información.');return;}
+  let r=new SR();
+  r.lang='es-PE';
+  r.interimResults=true;
+  r.onresult=e=>{
+    const transcript=Array.from(e.results).map(res=>res[0].transcript).join('');
+    target.value=transcript;
+    target.dispatchEvent(new Event('input'));
+  };
+  r.onerror=()=>{
+    recordCorrection('Dictado por voz con error o cancelado');
+    alert('El dictado no fue reconocido. Puedes continuar por escrito.');
+  };
+  try{r.start()}catch{alert('No fue posible iniciar el micrófono. Usa el teclado.')}
+}
 document.querySelectorAll('[data-saytarget]').forEach(b=>b.onclick=()=>dictate($(b.dataset.saytarget)));
 $('begin').onclick=()=>{session.alias=$('alias').value.trim().slice(0,35)||'Paciente de prueba';show(1);msg('Puedes tocar o escribir dónde sientes la molestia.')};
-$('zoneNext').onclick=()=>{session.region=$('region').value.trim().slice(0,90);if(!session.region){$('zoneHint').textContent='Indica una zona antes de continuar.';return;}$('confirmRegion').textContent=session.region;show(2);msg('Has señalado '+session.region+'. ¿Es correcto?')};
+$('zoneNext').onclick=()=>{
+  session.region=$('region').value.trim().slice(0,90);
+  if(!session.region){
+    $('zoneHint').textContent='Indica una zona antes de continuar.';
+    recordCorrection('Avanzar sin zona seleccionada');
+    return;
+  }
+  $('confirmRegion').textContent=session.region;
+  show(2);
+  msg('Has señalado '+session.region+'. ¿Es correcto?');
+};
 $('regionOk').onclick=()=>{question=0;show(3)};
-document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>show(Number(b.dataset.back)));
-function renderQuestion(){$('questionCount').textContent='Pregunta '+(question+1)+' de '+questions.length;$('questionLabel').textContent=questions[question][0];$('answer').value=session.answers[keys[question]]||'';$('answerError').textContent='';msg(questions[question][0])}
-function record(){const t=$('answer').value.trim();if(!t){$('answerError').textContent='Por favor, responde o escribe "no".';return false;}session.answers[keys[question]]=t.slice(0,700);return true;}
-$('qNext').onclick=()=>{if(!record())return;if(question<3){question++;renderQuestion()}else show(4)};
-$('qBack').onclick=()=>{if($('answer').value.trim())session.answers[keys[question]]=$('answer').value.trim();if(question>0){question--;renderQuestion()}else show(2)};
-$('dictate').onclick=()=>dictate($('answer'));$('repeat').onclick=()=>msg(questions[question][0]);$('simplify').onclick=()=>{$('questionLabel').textContent=questions[question][1];msg(questions[question][1])};
+
+$('btnCorrectRegion').onclick=()=>{
+  recordCorrection('Corrección de región anatómica');
+  show(1);
+};
+
+document.querySelectorAll('[data-back]').forEach(b=>{
+  if(b.id!=='btnCorrectRegion'){
+    b.onclick=()=>show(Number(b.dataset.back));
+  }
+});
+
+function renderQuestion(){
+  clearTimeout(questionTimer);
+  $('questionCount').textContent='Pregunta '+(question+1)+' de '+questions.length;
+  $('questionLabel').textContent=questions[question][0];
+  $('answer').value=session.answers[keys[question]]||'';
+  $('answerError').textContent='';
+  $('rhythmHint').hidden=true;
+  $('simplify')?.classList.remove('highlight-pulse');
+  msg(questions[question][0]);
+
+  questionStartTime=Date.now();
+  // Temporizador de 10 segundos: ritmo pausado detectado si se superan los 10s
+  questionTimer=setTimeout(()=>{
+    userProfile.rhythm='pausado';
+    saveProfile();
+    const hint=$('rhythmHint');
+    if(hint){
+      hint.hidden=false;
+      hint.textContent='💡 Has demorado más de 10 segundos. Si lo deseas, pulsa "Explicar más fácil" o usa el micrófono con calma.';
+    }
+    $('simplify')?.classList.add('highlight-pulse');
+    if(userProfile.speak){
+      msg('Tómate el tiempo que necesites. Si lo deseas, pulsa explicar más fácil.');
+    }
+  },10000);
+}
+
+function record(){
+  const t=$('answer').value.trim();
+  if(!t){
+    $('answerError').textContent='Por favor, responde o escribe "no".';
+    recordCorrection('Respuesta vacía en pregunta');
+    return false;
+  }
+  session.answers[keys[question]]=t.slice(0,700);
+  return true;
+}
+
+$('qNext').onclick=()=>{
+  if(!record())return;
+  clearTimeout(questionTimer);
+  const elapsed=(Date.now()-questionStartTime)/1000;
+  userProfile.questionTimes.push(elapsed);
+  const avg=userProfile.questionTimes.reduce((a,b)=>a+b,0)/userProfile.questionTimes.length;
+  userProfile.avgTimePerQuestion=Math.round(avg*10)/10;
+  if(elapsed>10||avg>10){
+    userProfile.rhythm='pausado';
+  }
+  saveProfile();
+  if(question<3){question++;renderQuestion()}else show(4);
+};
+
+$('qBack').onclick=()=>{
+  clearTimeout(questionTimer);
+  recordCorrection('Retroceso en entrevista guiada');
+  if($('answer').value.trim())session.answers[keys[question]]=$('answer').value.trim();
+  if(question>0){question--;renderQuestion()}else show(2);
+};
+
+$('dictate').onclick=()=>dictate($('answer'));
+$('repeat').onclick=()=>msg(questions[question][0]);
+$('simplify').onclick=()=>{
+  $('questionLabel').textContent=questions[question][1];
+  msg(questions[question][1]);
+  $('simplify')?.classList.remove('highlight-pulse');
+};
 function details(root,entries){root.replaceChildren();for(const [key,value] of entries){let dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=key;dd.textContent=value||'Sin dato';root.append(dt,dd)}}
-function renderReview(){details($('review'),[['Paciente',session.alias],['Zona confirmada',session.region],['Molestia',session.answers.motivo],['Inicio',session.answers.inicio],['Intensidad declarada',session.answers.intensidad],['Síntomas adicionales',session.answers.adicionales]])}
+function renderReview(){details($('review'),[['Paciente',session.alias],['Zona confirmada',session.region],['Molestia',session.answers.motivo],['Inicio',session.answers.inicio],['Intensidad declarada',session.answers.intensidad],['Síntomas adicionales',session.answers.adicionales],['Ritmo de respuesta',userProfile.rhythm==='pausado'?'Pausado (>10s por pregunta)':'Normal (≤10s)'],['Correcciones registradas',userProfile.errorCount]])}
 async function api(url,options){const r=await fetch(url,options);let d=await r.json();if(!r.ok)throw Error(d.error||'No fue posible completar la acción');return d}
 const jsonPost=(url,data)=>api(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)});
 $('summarize').onclick=async()=>{const b=$('summarize');b.disabled=true;try{const d=await jsonPost('/api/llm',session);session.summary=d.summary;session.priority=d.priority;$('summaryText').textContent=d.summary;$('summaryMode').textContent='Procedencia: '+(d.mode==='gemini'?'LLM remoto':'simulación local')+'. '+(d.warning||d.disclaimer||'');$('result').hidden=false;msg('Ya está disponible el resumen del relato ficticio.')}catch(e){alert(e.message)}finally{b.disabled=false}};
-$('edit').onclick=()=>{question=0;$('result').hidden=true;show(3)};
+$('edit').onclick=()=>{
+  recordCorrection('Regreso a editar entrevista desde el resumen');
+  question=0;
+  $('result').hidden=true;
+  show(3);
+};
 $('send').onclick=async()=>{if(!session.summary)return;try{sent=await jsonPost('/api/cases',session);$('code').textContent=sent.code;$('delivery').textContent='Caso ficticio enviado al servidor de esta demostración.';$('receipt').textContent='Estado: enviado (aún NO confirmado como recibido).';$('result').hidden=true;show(5)}catch(e){$('delivery').textContent='Pendiente de envío: '+e.message;localStorage.setItem('triagevoz_borrador_ficticio',JSON.stringify(session));alert('No hay conexión. Se conserva el borrador de demostración en este navegador; no se marcará como recibido.')}};
 async function refresh(){if(!sent)return;try{sent=await api('/api/cases/by-code?code='+encodeURIComponent(sent.code));$('receipt').textContent='Estado verificado: '+sent.status;$('doctorResponse').replaceChildren();for(const r of sent.replies){const p=document.createElement('p');p.textContent=r.author+': '+r.message;$('doctorResponse').append(p)}}catch(e){$('receipt').textContent='No es posible comprobar recepción: '+e.message}}
 $('refresh').onclick=refresh;$('restart').onclick=()=>{session={alias:'Paciente de prueba',region:'',answers:{motivo:'',inicio:'',intensidad:'',adicionales:''},summary:'',priority:''};sent=null;$('region').value='';$('result').hidden=true;show(0)};

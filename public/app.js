@@ -130,7 +130,7 @@ function show(n){
   if(n===3)renderQuestion();
   if(n===4)renderReview();
 }
-function patientTab(active){$('patient').hidden=!active;$('doctor').hidden=active;$('patientTab').classList.toggle('active',active);$('doctorTab').classList.toggle('active',!active);}
+function patientTab(active){$('patient').hidden=!active;$('doctor').hidden=active;$('patientTab').classList.toggle('active',active);$('doctorTab').classList.toggle('active',!active);if(!active)loadRooms();}
 $('patientTab').onclick=()=>patientTab(true);$('doctorTab').onclick=()=>patientTab(false);
 zones.forEach(z=>{const b=document.createElement('button');b.type='button';b.textContent=z;b.onclick=()=>{$('region').value=z;session.region=z;paintZone();msg('Seleccionaste '+z)};$('zones').append(b)});
 function paintZone(){
@@ -278,10 +278,10 @@ $('edit').onclick=()=>{
   $('result').hidden=true;
   show(3);
 };
-$('send').onclick=async()=>{if(!session.summary)return;try{sent=await jsonPost('/api/cases',session);$('code').textContent=sent.code;$('delivery').textContent='Caso ficticio enviado al servidor de esta demostración.';$('receipt').textContent='Estado: enviado (aún NO confirmado como recibido).';$('result').hidden=true;show(5)}catch(e){$('delivery').textContent='Pendiente de envío: '+e.message;localStorage.setItem('triagevoz_borrador_ficticio',JSON.stringify(session));alert('No hay conexión. Se conserva el borrador de demostración en este navegador; no se marcará como recibido.')}};
-async function refresh(){if(!sent)return;try{sent=await api('/api/cases/by-code?code='+encodeURIComponent(sent.code));$('receipt').textContent='Estado verificado: '+sent.status;$('doctorResponse').replaceChildren();for(const r of sent.replies){const p=document.createElement('p');p.textContent=r.author+': '+r.message;$('doctorResponse').append(p)}}catch(e){$('receipt').textContent='No es posible comprobar recepción: '+e.message}}
+$('send').onclick=async()=>{if(!session.summary)return;try{sent=await jsonPost('/api/cases',session);$('code').textContent='SALA-'+sent.code;$('delivery').textContent='Sala colaborativa de teleconsulta creada y compartida en el servidor.';$('receipt').textContent='🟡 Estado: Sala abierta en espera de que el médico remoto se una y confirme recepción.';$('result').hidden=true;show(5)}catch(e){$('delivery').textContent='Pendiente de envío: '+e.message;localStorage.setItem('triagevoz_borrador_ficticio',JSON.stringify(session));alert('No hay conexión. Se conserva el borrador de demostración en este navegador; no se marcará como recibido.')}};
+async function refresh(){if(!sent)return;try{sent=await api('/api/cases/by-code?code='+encodeURIComponent(sent.code));$('receipt').textContent=sent.status==='recibido'?'🟢 Estado verificado: El médico remoto se ha unido a la sala y confirmó la recepción.':'🟡 Estado: Sala enviada, pendiente de acuse del médico remoto.';$('doctorResponse').replaceChildren();for(const r of sent.replies){const p=document.createElement('p');p.className='confirm';p.textContent=r.author+': '+r.message;$('doctorResponse').append(p)}}catch(e){$('receipt').textContent='No es posible comprobar recepción: '+e.message}}
 $('refresh').onclick=refresh;$('restart').onclick=()=>{session={alias:'Paciente de prueba',region:'',answers:{motivo:'',inicio:'',intensidad:'',adicionales:''},summary:'',priority:''};sent=null;$('region').value='';$('result').hidden=true;show(0)};
-let doctorCase=null;function docRender(c){if(doctorCase&&doctorCase.code!==c.code)$('message').value='';doctorCase=c;$('caseView').hidden=false;$('caseTitle').textContent='Caso '+c.code+' · '+c.alias;details($('caseDetails'),[['Zona',c.region],['Relato',c.answers.motivo],['Inicio',c.answers.inicio],['Intensidad',c.answers.intensidad],['Adicionales',c.answers.adicionales],['Resumen generado',c.summary]]);$('caseState').textContent='Estado confirmado por servidor: '+c.status;$('ack').disabled=c.status==='recibido';$('replyState').textContent='Respuestas registradas: '+c.replies.length;
+let doctorCase=null;function docRender(c){if(doctorCase&&doctorCase.code!==c.code)$('message').value='';doctorCase=c;$('caseView').hidden=false;$('caseTitle').textContent='Sala SALA-'+c.code+' · '+c.alias;details($('caseDetails'),[['Zona',c.region],['Relato',c.answers.motivo],['Inicio',c.answers.inicio],['Intensidad',c.answers.intensidad],['Adicionales',c.answers.adicionales],['Resumen generado',c.summary]]);$('caseState').textContent='Estado confirmado por servidor: '+c.status;$('ack').disabled=c.status==='recibido';$('replyState').textContent='Respuestas registradas: '+c.replies.length;
 const history=$('replyHistory');
 history.replaceChildren();
 for(const response of c.replies){
@@ -295,8 +295,56 @@ for(const response of c.replies){
 }
 $('replyHistorySection').hidden=c.replies.length===0;
 }
+async function loadRooms(){
+ const listContainer=$('roomList');
+ if(!listContainer)return;
+ try{
+  const rooms=await api('/api/rooms');
+  listContainer.replaceChildren();
+  if(!rooms.length){
+   const empty=document.createElement('p');
+   empty.className='helper';
+   empty.textContent='No hay salas activas en este momento. Al enviar un pre-triaje se creará una nueva sala.';
+   listContainer.append(empty);
+   return;
+  }
+  for(const r of rooms){
+   const card=document.createElement('button');
+   card.type='button';
+   card.className='room-card';
+   const head=document.createElement('div');
+   head.className='room-card-head';
+   const alias=document.createElement('span');
+   alias.className='room-alias';
+   alias.textContent=r.alias||'Sala de paciente';
+   const badge=document.createElement('span');
+   badge.className='room-badge '+(r.status==='recibido'?'recibido':'enviado');
+   badge.textContent=r.status==='recibido'?'🟢 Recibido / Atendido':'🟡 En espera de médico';
+   head.append(alias,badge);
+   const details=document.createElement('div');
+   details.className='room-details';
+   details.textContent='Zona: '+(r.region||'No especificada')+' · '+(r.motivo?r.motivo.slice(0,55):'Pre-triaje general');
+   const code=document.createElement('div');
+   code.className='room-code';
+   code.textContent='SALA-'+r.code+' · '+(r.repliesCount?r.repliesCount+' respuesta(s)':'Sin respuesta');
+   card.append(head,details,code);
+   card.onclick=()=>{
+    $('lookupCode').value=r.code;
+    $('lookup').click();
+   };
+   listContainer.append(card);
+  }
+ }catch(e){
+  listContainer.replaceChildren();
+  const err=document.createElement('p');
+  err.className='helper';
+  err.textContent='Error cargando salas: '+e.message;
+  listContainer.append(err);
+ }
+}
+if($('refreshRooms'))$('refreshRooms').onclick=loadRooms;
 $('lookup').onclick=async()=>{try{const c=await api('/api/cases/by-code?code='+encodeURIComponent($('lookupCode').value));$('doctorErr').textContent='';docRender(c)}catch(e){$('caseView').hidden=true;$('doctorErr').textContent=e.message}};
-$('ack').onclick=async()=>{if(!doctorCase)return;try{docRender(await jsonPost('/api/cases/ack',{code:doctorCase.code}))}catch(e){$('doctorErr').textContent=e.message}};
+$('ack').onclick=async()=>{if(!doctorCase)return;try{docRender(await jsonPost('/api/cases/ack',{code:doctorCase.code}));loadRooms();}catch(e){$('doctorErr').textContent=e.message}};
 $('reply').onclick=async()=>{
  if(!doctorCase)return;
  const response=$('message').value.trim();
@@ -309,6 +357,7 @@ $('reply').onclick=async()=>{
  try{
   const saved=await jsonPost('/api/cases/reply',{code:doctorCase.code,message:response});
   docRender(saved);
+  loadRooms();
   $('doctorErr').textContent='';
   $('replyState').textContent='Respuesta guardada y visible en el historial. Respuestas registradas: '+saved.replies.length;
  }catch(e){$('doctorErr').textContent=e.message}

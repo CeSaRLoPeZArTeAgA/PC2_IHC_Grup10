@@ -55,3 +55,27 @@ test('El médico puede revisar el historial y el texto enviado permanece visible
  assert.ok(sendHandler.includes('const response='));
  assert.ok(!sendHandler.includes("$('message').value=''"));
 });
+
+test('Multiusuario: salas de teleconsulta colaborativas y bandeja de salas activas',async()=>{
+ const fs=await import('node:fs/promises');
+ const html=await fs.readFile(new URL('../public/index.html',import.meta.url),'utf8');
+ const js=await fs.readFile(new URL('../public/app.js',import.meta.url),'utf8');
+ assert.match(html,/id="roomList"/);
+ assert.match(html,/id="refreshRooms"/);
+ assert.match(html,/Salas de teleconsulta rural/);
+ assert.match(js,/async function loadRooms/);
+ assert.match(js,/\/api\/rooms/);
+ assert.match(js,/SALA-/);
+ const s=http.createServer(handler);
+ await new Promise(ok=>s.listen(0,'127.0.0.1',ok));
+ const url='http://127.0.0.1:'+s.address().port;
+ try{
+  const rooms=await(await fetch(url+'/api/rooms')).json();
+  assert.ok(Array.isArray(rooms));
+  assert.ok(rooms.length>0);
+  assert.ok(rooms[0].code);
+ }finally{
+  await new Promise(ok=>s.close(ok));
+ }
+});
+

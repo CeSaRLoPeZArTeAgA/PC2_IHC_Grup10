@@ -27,7 +27,7 @@ ID Req,Descripción del requerimiento,Tipo,Prioridad,Historia(s) de usuario que 
 "RNF-09","Conectividad limitada","NFR","Alta","HU-11;HU-12","Parcial","Borrador local, estado no falseado"
 "RNF-10","Capa LLM reemplazable","NFR","Media","HU-06;HU-07","Demo","Adaptador Gemini/fallback"
 "RF-18","Personalización persistente","FR","Alta","HU-13","Demo","localStorage solo para preferencias"
-"RF-19","Multiusuario colaborativo","FR","Alta","HU-08;HU-12","Demo","Roles simulados sin autenticación"
+"RF-19","Multiusuario con salas colaborativas","FR","Alta","HU-08;HU-12","Demo","Salas compartidas con bandeja activa y acuse"
 "RF-20","PWA instalable","FR","Alta","HU-01","Demo","Manifest y service worker"
 "RF-21","Estado verificable de entrega","FR","Alta","HU-12","Demo","Enviado -> recibido solo con ACK"
 "RF-22","Tres alternativas navegables","FR","Alta","HU-14","Demo","A, B y C con cuatro pantallas"

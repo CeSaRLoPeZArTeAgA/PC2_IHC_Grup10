@@ -25,3 +25,27 @@ body.high .rhythm-hint{background:#112229;color:#fff;border-color:#00bcd4}
 .reply-history p{white-space:pre-wrap;margin:4px 0 0}
 body.high .reply-history{background:#1a1a1a;border-color:#666}
 body.high .reply-history p{color:#fff}
+.rooms-panel{background:#f1f8fa;border:1px solid #c2dbe2;border-radius:14px;padding:16px;margin:18px 0}
+.rooms-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.rooms-header h2{font-size:1.15rem;margin:0;color:#0b4c5c}
+.btn-sm{padding:6px 14px;font-size:.85rem;min-height:auto}
+.room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-top:12px}
+.room-card{background:#fff;border:1px solid #b7d6df;border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;transition:all .18s ease;display:flex;flex-direction:column;gap:5px;width:100%}
+.room-card:hover{background:#e7f5f8;border-color:#006c83;transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,108,131,.15)}
+.room-card:focus-visible{outline:3px solid #edb34f;outline-offset:2px}
+.room-card-head{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.room-badge{font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:6px;text-transform:uppercase}
+.room-badge.enviado{background:#fef3cd;color:#856404;border:1px solid #ffeeba}
+.room-badge.recibido{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+.room-alias{font-weight:700;color:#0b4c5c;font-size:.95rem}
+.room-details{font-size:.86rem;color:#435b67}
+.room-code{font-family:monospace;font-size:.82rem;color:#006c83;font-weight:700}
+.manual-lookup{margin-top:20px;padding-top:15px;border-top:1px dashed #c0d8e0}
+body.high .rooms-panel{background:#181818;border-color:#555}
+body.high .room-card{background:#222;border-color:#666;color:#fff}
+body.high .room-card:hover{background:#333;border-color:#edb34f}
+body.high .room-alias{color:#fff}
+body.high .room-details{color:#ddd}
+body.high .room-badge.enviado{background:#4d3b00;color:#ffe082;border-color:#806300}
+body.high .room-badge.recibido{background:#0d3a17;color:#a3e9b1;border-color:#1c692c}
+

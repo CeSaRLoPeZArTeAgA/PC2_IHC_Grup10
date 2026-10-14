@@ -16,7 +16,7 @@
 | Navegación entre pantallas | docs/03-flujo-pantallas.md | Documentado |
 | PWA voz + silueta + LLM opcional | public/, server.mjs | Demo local |
 | Personalización persistente | public/app.js | Parcial |
-| Colaboración multiusuario | server.mjs | Demo sin autenticación |
+| Colaboración multiusuario | server.mjs, public/app.js | Implementado: salas de teleconsulta colaborativas y bandeja interactiva |
 | Datos simulados | data/casos-ficticios.json | Incluido |
 | Licencia Open Source | LICENSE | Incluido |
 | Aporte personal | mi-aporte-cesar-lopez-arteaga.md | Incluido |

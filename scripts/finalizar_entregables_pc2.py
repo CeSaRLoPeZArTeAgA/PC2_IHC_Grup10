@@ -102,9 +102,20 @@ def new_personal():
         image=ROOT/'assets/evidencias-integracion'/filename
         if not image.is_file():raise FileNotFoundError(image)
         if i>0:doc.add_page_break()
-        p=doc.add_paragraph()
-        p.alignment=WD_ALIGN_PARAGRAPH.CENTER
-        p.add_run().add_picture(str(image),width=Cm(15.95))
+        # Recorte centrado de captura real: elimina márgenes vacíos del navegador;
+        # no modifica ni sintetiza los elementos de la interfaz.
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as tmpdir:
+            with Image.open(image) as source:
+                if source.width>1100:
+                    left=int(source.width*0.20)
+                    right=int(source.width*0.80)
+                    source=source.crop((left,0,right,source.height))
+                cropped=Path(tmpdir)/filename
+                source.save(cropped,format='PNG')
+            p=doc.add_paragraph()
+            p.alignment=WD_ALIGN_PARAGRAPH.CENTER
+            p.add_run().add_picture(str(cropped),width=Cm(15.1))
         p=doc.add_paragraph()
         p.alignment=WD_ALIGN_PARAGRAPH.CENTER
         r=p.add_run(caption);r.bold=True;r.font.size=Pt(9)

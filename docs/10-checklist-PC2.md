@@ -19,7 +19,7 @@
 | Interacción multirol local | server.mjs, public/app.js | Demostrada: bandeja de casos ficticios; NO videollamada ni usuarios remotos autenticados |
 | Datos simulados | data/casos-ficticios.json | Incluido |
 | Licencia Open Source | LICENSE | Incluido |
-| Aportes personales | mi-aporte-cesar-lopez-arteaga.md y mi-aporte-jesus-santa-cruz.md | Dos aportes disponibles; falta aporte de Bryan si lo exige el curso |
+| Aportes personales | mi-aporte-bryan-pumayauli.doc/.docx/.md, mi-aporte-jesus-santa-cruz.doc/.docx/.md, mi-aporte-cesar-lopez-arteaga.doc/.docx/.md | Completo: los tres integrantes cuentan con documento DOCX, DOC y MD individual |
 | Informe Word/PDF y capturas históricas | docs/01-informe-PC2.docx, docs/01-informe-PC2.pdf, assets/ | Incorporados; actualizaciones del software descritas en anexo técnico |
 | Video de sustentación | Guía en docs/07-guia-sustentacion.md | **Pendiente de grabación** |
 

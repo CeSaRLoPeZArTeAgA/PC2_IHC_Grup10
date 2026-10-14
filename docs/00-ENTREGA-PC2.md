@@ -13,8 +13,9 @@
 |---|---|
 | **Informe PC2 editable** | [Descargar Word DOCX](01-informe-PC2.docx) |
 | **Informe PC2 para presentar** | [Abrir PDF](01-informe-PC2.pdf) |
-| Aporte individual editable | [Descargar aporte DOCX](../mi-aporte-cesar-lopez-arteaga.docx) |
-| Aporte individual en formato solicitado | [Descargar aporte DOC](../mi-aporte-cesar-lopez-arteaga.doc) |
+| Aporte individual — Bryan Pumayauli | [Descargar DOCX](../mi-aporte-bryan-pumayauli.docx) · [Descargar DOC](../mi-aporte-bryan-pumayauli.doc) |
+| Aporte individual — Jesus Santa Cruz | [Descargar DOCX](../mi-aporte-jesus-santa-cruz.docx) · [Descargar DOC](../mi-aporte-jesus-santa-cruz.doc) |
+| Aporte individual — César López | [Descargar DOCX](../mi-aporte-cesar-lopez-arteaga.docx) · [Descargar DOC](../mi-aporte-cesar-lopez-arteaga.doc) |
 | Enunciado PC2 | [Abrir enunciado PDF](PC02-enunciado.pdf) |
 | Lección base LEC06 | [Abrir LEC06 PDF](LEC06-fuente.pdf) |
 | Lección base LEC07 | [Abrir LEC07 PDF](LEC07-fuente.pdf) |

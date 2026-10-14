@@ -281,8 +281,37 @@ $('edit').onclick=()=>{
 $('send').onclick=async()=>{if(!session.summary)return;try{sent=await jsonPost('/api/cases',session);$('code').textContent=sent.code;$('delivery').textContent='Caso ficticio enviado al servidor de esta demostración.';$('receipt').textContent='Estado: enviado (aún NO confirmado como recibido).';$('result').hidden=true;show(5)}catch(e){$('delivery').textContent='Pendiente de envío: '+e.message;localStorage.setItem('triagevoz_borrador_ficticio',JSON.stringify(session));alert('No hay conexión. Se conserva el borrador de demostración en este navegador; no se marcará como recibido.')}};
 async function refresh(){if(!sent)return;try{sent=await api('/api/cases/by-code?code='+encodeURIComponent(sent.code));$('receipt').textContent='Estado verificado: '+sent.status;$('doctorResponse').replaceChildren();for(const r of sent.replies){const p=document.createElement('p');p.textContent=r.author+': '+r.message;$('doctorResponse').append(p)}}catch(e){$('receipt').textContent='No es posible comprobar recepción: '+e.message}}
 $('refresh').onclick=refresh;$('restart').onclick=()=>{session={alias:'Paciente de prueba',region:'',answers:{motivo:'',inicio:'',intensidad:'',adicionales:''},summary:'',priority:''};sent=null;$('region').value='';$('result').hidden=true;show(0)};
-let doctorCase=null;function docRender(c){doctorCase=c;$('caseView').hidden=false;$('caseTitle').textContent='Caso '+c.code+' · '+c.alias;details($('caseDetails'),[['Zona',c.region],['Relato',c.answers.motivo],['Inicio',c.answers.inicio],['Intensidad',c.answers.intensidad],['Adicionales',c.answers.adicionales],['Resumen generado',c.summary]]);$('caseState').textContent='Estado confirmado por servidor: '+c.status;$('ack').disabled=c.status==='recibido';$('replyState').textContent='Respuestas registradas: '+c.replies.length;}
+let doctorCase=null;function docRender(c){if(doctorCase&&doctorCase.code!==c.code)$('message').value='';doctorCase=c;$('caseView').hidden=false;$('caseTitle').textContent='Caso '+c.code+' · '+c.alias;details($('caseDetails'),[['Zona',c.region],['Relato',c.answers.motivo],['Inicio',c.answers.inicio],['Intensidad',c.answers.intensidad],['Adicionales',c.answers.adicionales],['Resumen generado',c.summary]]);$('caseState').textContent='Estado confirmado por servidor: '+c.status;$('ack').disabled=c.status==='recibido';$('replyState').textContent='Respuestas registradas: '+c.replies.length;
+const history=$('replyHistory');
+history.replaceChildren();
+for(const response of c.replies){
+ const item=document.createElement('li');
+ const author=document.createElement('strong');
+ author.textContent=response.author||'Rol médico simulado';
+ const message=document.createElement('p');
+ message.textContent=response.message||'';
+ item.append(author,message);
+ history.append(item);
+}
+$('replyHistorySection').hidden=c.replies.length===0;
+}
 $('lookup').onclick=async()=>{try{const c=await api('/api/cases/by-code?code='+encodeURIComponent($('lookupCode').value));$('doctorErr').textContent='';docRender(c)}catch(e){$('caseView').hidden=true;$('doctorErr').textContent=e.message}};
 $('ack').onclick=async()=>{if(!doctorCase)return;try{docRender(await jsonPost('/api/cases/ack',{code:doctorCase.code}))}catch(e){$('doctorErr').textContent=e.message}};
-$('reply').onclick=async()=>{if(!doctorCase)return;try{docRender(await jsonPost('/api/cases/reply',{code:doctorCase.code,message:$('message').value}));$('message').value='';$('replyState').textContent='Respuesta del rol simulado registrada.'}catch(e){$('doctorErr').textContent=e.message}};
+$('reply').onclick=async()=>{
+ if(!doctorCase)return;
+ const response=$('message').value.trim();
+ if(!response){$('doctorErr').textContent='Escribe una respuesta antes de enviarla.';return;}
+ if(doctorCase.replies.at(-1)?.message===response){
+  $('replyState').textContent='Esta respuesta ya está registrada. Modifica el texto para enviar otra.';
+  return;
+ }
+ const button=$('reply');button.disabled=true;
+ try{
+  const saved=await jsonPost('/api/cases/reply',{code:doctorCase.code,message:response});
+  docRender(saved);
+  $('doctorErr').textContent='';
+  $('replyState').textContent='Respuesta guardada y visible en el historial. Respuestas registradas: '+saved.replies.length;
+ }catch(e){$('doctorErr').textContent=e.message}
+ finally{button.disabled=false}
+};
 if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}

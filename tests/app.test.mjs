@@ -8,3 +8,13 @@ const ack=await(await fetch(url+'/api/cases/ack',{method:'POST',headers:{'conten
 const rep=await(await fetch(url+'/api/cases/reply',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({code:created.code,message:'Respuesta simulada'})})).json();assert.equal(rep.replies.length,1);
 const find=await(await fetch(url+'/api/cases/by-code?code='+created.code)).json();assert.equal(find.code,created.code);
 }finally{await new Promise(ok=>s.close(ok))}});
+test('Interfaz principal sin banner ni pie académico y con límites de IA visibles en el resumen',async()=>{
+ const fs=await import('node:fs/promises');
+ for(const name of ['index.html','prototipos/alternativa-a.html','prototipos/alternativa-b.html','prototipos/alternativa-c.html']){
+  const page=await fs.readFile(new URL('../public/'+name,import.meta.url),'utf8');
+  assert.doesNotMatch(page,/PROTOTIPO ACADÉMICO|CASOS FICTICIOS\.|LEC06\s*\+\s*LEC07|PWA educativa|<section class="warning"|<footer\b/i,name);
+ }
+ const main=await fs.readFile(new URL('../public/index.html',import.meta.url),'utf8');
+ assert.match(main,/La IA no emite un diagnóstico/);
+ assert.match(main,/No existe clasificación clínica validada/);
+});

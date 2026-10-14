@@ -41,6 +41,7 @@ jobs:
       - name: Exportar PDF
         run: |
           libreoffice -env:UserInstallation=file:///tmp/pc2lo_revision --headless --convert-to pdf --outdir docs docs/14-anexo-version-actual.docx
+          libreoffice -env:UserInstallation=file:///tmp/pc2lo_revision --headless --convert-to pdf --outdir docs docs/01-informe-PC2.docx
           libreoffice -env:UserInstallation=file:///tmp/pc2lo_revision --headless --convert-to pdf --outdir presentacion presentacion/PC2-TriageVoz-Rural-Grupo10.pptx
       - name: Validar documentos y diapositivas generadas
         run: |
@@ -49,14 +50,17 @@ jobs:
           from zipfile import ZipFile
           from docx import Document
           doc=Path('docs/14-anexo-version-actual.docx')
+          report=Path('docs/01-informe-PC2.docx')
+          reportpdf=Path('docs/01-informe-PC2.pdf')
           pdf=Path('docs/14-anexo-version-actual.pdf')
           ppt=Path('presentacion/PC2-TriageVoz-Rural-Grupo10.pptx')
           pptpdf=Path('presentacion/PC2-TriageVoz-Rural-Grupo10.pdf')
-          for f in (doc,pdf,ppt,pptpdf,Path('assets/c4.png'),Path('assets/flujo.png')):
+          for f in (doc,pdf,report,reportpdf,ppt,pptpdf,Path('assets/c4.png'),Path('assets/flujo.png')):
               assert f.exists() and f.stat().st_size>5000, str(f)
           text=' '.join(p.text for p in Document(doc).paragraphs)
           for name in ('Santa Cruz Basilio','López Arteaga','Pumayauli Evangelista'):
               assert name in text,name
+          assert 'ANEXO DE ACTUALIZACIÓN: INTEGRACIÓN DEL GRUPO 10' in ' '.join(p.text for p in Document(report).paragraphs)
           with ZipFile(ppt) as z:
               slides=[x for x in z.namelist() if x.startswith('ppt/slides/slide') and x.endswith('.xml')]
               assert len(slides)==10, f'expected 10 slides, got {len(slides)}'
@@ -67,7 +71,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/14-anexo-version-actual.docx docs/14-anexo-version-actual.pdf presentacion/PC2-TriageVoz-Rural-Grupo10.pptx presentacion/PC2-TriageVoz-Rural-Grupo10.pdf assets/c4.png assets/flujo.png
+          git add docs/01-informe-PC2.docx docs/01-informe-PC2.pdf docs/14-anexo-version-actual.docx docs/14-anexo-version-actual.pdf presentacion/PC2-TriageVoz-Rural-Grupo10.pptx presentacion/PC2-TriageVoz-Rural-Grupo10.pdf assets/c4.png assets/flujo.png
           if ! git diff --cached --quiet; then
             git commit -m "build(docs): publicar anexo Word PDF, diagramas actualizados y presentación PC2"
             git push

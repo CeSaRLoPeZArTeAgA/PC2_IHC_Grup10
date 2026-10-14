@@ -1,0 +1,74 @@
+name: Generar entregables PC2
+on:
+  push:
+    branches: [revision-pc2-compatibilidad-20261014]
+    paths:
+      - 'scripts/generar_presentacion.cjs'
+      - 'scripts/generar_anexo.py'
+      - 'assets/c4.dot'
+      - 'assets/flujo.dot'
+      - 'docs/14-anexo-version-actual.md'
+      - '.github/workflows/generar-entregables.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  compilar-entregables:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preparar dependencias
+        run: |
+          python -m pip install python-docx
+          npm install --no-save --package-lock=false pptxgenjs
+          if ! command -v libreoffice >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y libreoffice-writer libreoffice-impress graphviz poppler-utils
+          fi
+      - name: Generar DOCX, PPTX y diagramas
+        run: |
+          python scripts/generar_anexo.py
+          node scripts/generar_presentacion.cjs
+          dot -Tpng assets/c4.dot -o assets/c4.png
+          dot -Tpng assets/flujo.dot -o assets/flujo.png
+      - name: Exportar PDF
+        run: |
+          libreoffice -env:UserInstallation=file:///tmp/pc2lo_revision --headless --convert-to pdf --outdir docs docs/14-anexo-version-actual.docx
+          libreoffice -env:UserInstallation=file:///tmp/pc2lo_revision --headless --convert-to pdf --outdir presentacion presentacion/PC2-TriageVoz-Rural-Grupo10.pptx
+      - name: Validar documentos y diapositivas generadas
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from docx import Document
+          doc=Path('docs/14-anexo-version-actual.docx')
+          pdf=Path('docs/14-anexo-version-actual.pdf')
+          ppt=Path('presentacion/PC2-TriageVoz-Rural-Grupo10.pptx')
+          pptpdf=Path('presentacion/PC2-TriageVoz-Rural-Grupo10.pdf')
+          for f in (doc,pdf,ppt,pptpdf,Path('assets/c4.png'),Path('assets/flujo.png')):
+              assert f.exists() and f.stat().st_size>5000, str(f)
+          text=' '.join(p.text for p in Document(doc).paragraphs)
+          for name in ('Santa Cruz Basilio','López Arteaga','Pumayauli Evangelista'):
+              assert name in text,name
+          with ZipFile(ppt) as z:
+              slides=[x for x in z.namelist() if x.startswith('ppt/slides/slide') and x.endswith('.xml')]
+              assert len(slides)==10, f'expected 10 slides, got {len(slides)}'
+          print('Documentos y presentación: OK, 10 diapositivas')
+          PY
+          pdfinfo presentacion/PC2-TriageVoz-Rural-Grupo10.pdf | grep -E 'Pages: *10'
+      - name: Publicar entregables generados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/14-anexo-version-actual.docx docs/14-anexo-version-actual.pdf presentacion/PC2-TriageVoz-Rural-Grupo10.pptx presentacion/PC2-TriageVoz-Rural-Grupo10.pdf assets/c4.png assets/flujo.png
+          if ! git diff --cached --quiet; then
+            git commit -m "build(docs): publicar anexo Word PDF, diagramas actualizados y presentación PC2"
+            git push
+          fi

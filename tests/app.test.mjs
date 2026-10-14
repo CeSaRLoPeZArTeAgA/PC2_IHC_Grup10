@@ -66,7 +66,7 @@ test('Multiusuario: salas de teleconsulta colaborativas y bandeja de salas activ
  const js=await fs.readFile(new URL('../public/app.js',import.meta.url),'utf8');
  assert.match(html,/id="roomList"/);
  assert.match(html,/id="refreshRooms"/);
- assert.match(html,/Salas de teleconsulta rural/);
+ assert.match(html,/Bandeja de casos simulados/);
  assert.match(js,/async function loadRooms/);
  assert.match(js,/\/api\/rooms/);
  assert.match(js,/SALA-/);

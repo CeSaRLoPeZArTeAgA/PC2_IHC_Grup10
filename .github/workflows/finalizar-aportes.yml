@@ -27,6 +27,8 @@ jobs:
           fi
       - name: Regenerar todos los entregables
         run: python scripts/finalizar_entregables_pc2.py
+      - name: Auditar identidad en todos los documentos
+        run: python scripts/auditar_cierre_pc2.py
       - name: Validar flujo y documentos
         run: |
           npm test

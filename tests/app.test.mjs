@@ -40,3 +40,18 @@ test('Integración de silueta anterior/posterior con ayudas adaptativas',async()
  for(const key of ['switchView','recordCorrection','userProfile','questionTimer','dataset.zone'])assert.ok(js.includes(key),key);
  assert.doesNotMatch(html,/PROTOTIPO ACADÉMICO|LEC06\s*\+\s*LEC07|PWA educativa/);
 });
+
+test('El médico puede revisar el historial y el texto enviado permanece visible',async()=>{
+ const fs=await import('node:fs/promises');
+ const html=await fs.readFile(new URL('../public/index.html',import.meta.url),'utf8');
+ const js=await fs.readFile(new URL('../public/app.js',import.meta.url),'utf8');
+ assert.match(html,/id="replyHistorySection"/);
+ assert.match(html,/id="replyHistory"/);
+ assert.match(js,/history\.replaceChildren\(\)/);
+ assert.match(js,/history\.append\(item\)/);
+ assert.match(js,/message\.textContent=response\.message/);
+ assert.match(js,/Esta respuesta ya está registrada/);
+ const sendHandler=js.slice(js.indexOf("$('reply').onclick="));
+ assert.ok(sendHandler.includes('const response='));
+ assert.ok(!sendHandler.includes("$('message').value=''"));
+});

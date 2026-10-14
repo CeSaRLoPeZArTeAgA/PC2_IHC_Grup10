@@ -37,6 +37,6 @@ test('Integración de silueta anterior/posterior con ayudas adaptativas',async()
  const html=await fs.readFile(new URL('../public/index.html',import.meta.url),'utf8');
  const js=await fs.readFile(new URL('../public/app.js',import.meta.url),'utf8');
  for(const id of ['frontView','backView','tabFront','tabBack','profileCard','profRhythm','profErrors','adaptiveBanner','rhythmHint','btnCorrectRegion'])assert.ok(html.includes('id="'+id+'"'),id);
- for(const key of ['switchView','recordCorrection','userProfile','questionTimer','data-zone'])assert.ok(js.includes(key),key);
+ for(const key of ['switchView','recordCorrection','userProfile','questionTimer','dataset.zone'])assert.ok(js.includes(key),key);
  assert.doesNotMatch(html,/PROTOTIPO ACADÉMICO|LEC06\s*\+\s*LEC07|PWA educativa/);
 });

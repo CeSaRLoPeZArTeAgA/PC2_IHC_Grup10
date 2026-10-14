@@ -34,4 +34,27 @@ doc.core_properties.title='Anexo de integración PC2 - TriageVoz Rural'
 doc.core_properties.author='Grupo 10 - Santa Cruz Basilio, López Arteaga, Pumayauli Evangelista'
 target.parent.mkdir(parents=True,exist_ok=True)
 doc.save(target)
+# Incorporar una sola vez el contenido técnico al informe grupal, sin sustituir sus capítulos existentes.
+report_path=root/'docs/01-informe-PC2.docx'
+if report_path.exists():
+    report=Document(report_path)
+    annex_title='ANEXO DE ACTUALIZACIÓN: INTEGRACIÓN DEL GRUPO 10'
+    if not any(annex_title in p.text for p in report.paragraphs):
+        report.add_page_break()
+        report.add_heading(annex_title,level=1)
+        report.add_paragraph('Este anexo registra cambios posteriores al informe original y no modifica las fuentes LEC06/LEC07.')
+        for paragraph in doc.paragraphs:
+            value=paragraph.text.strip()
+            if not value or value.startswith('Anexo técnico de integración') or value.startswith('Grupo 10 UNI:'):continue
+            if paragraph.style.name=='Heading 1':
+                report.add_heading(value,level=2)
+            elif paragraph.style.name=='Heading 2':
+                report.add_heading(value,level=3)
+            else:
+                report.add_paragraph(value)
+        report.core_properties.author='Grupo 10 - Santa Cruz Basilio, López Arteaga, Pumayauli Evangelista'
+        report.save(report_path)
+        print('Informe DOCX grupal ampliado:',report_path)
+    else:
+        print('Anexo ya presente; no se duplica en el informe.')
 print(target)

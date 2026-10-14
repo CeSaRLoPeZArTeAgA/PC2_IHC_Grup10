@@ -75,3 +75,11 @@ Instalación de demostración: ejecutar `npm start` con Node.js 20+ y visitar `h
 - [Fuente reproducible de presentación](../scripts/generar_presentacion.cjs).
 
 **Vigencia:** Los informes Word/PDF y capturas originales son antecedentes documentales; las nuevas funcionalidades se documentan en el anexo de integración. El registro de screenshots de la interfaz final y el video siguen pendientes de captura y grabación por los integrantes; no se declaran como evidencia disponible antes de realizarlos.
+
+## 7. Capturas E2E reproducibles de la versión integrada
+
+Se añadió el [registro de cinco capturas verificadas](15-evidencias-e2e.md) con imágenes PNG auténticas generadas al ejecutar el prototipo en Chromium mediante GitHub Actions. Las capturas anteriores se mantienen como históricas y las manuales del equipo corresponden a otra sesión ficticia.
+
+![Estado enviado en la ejecución E2E](../assets/evidencias-integracion/01-caso-enviado.png)
+
+![Respuesta al paciente en la ejecución E2E](../assets/evidencias-integracion/04-respuesta-paciente.png)

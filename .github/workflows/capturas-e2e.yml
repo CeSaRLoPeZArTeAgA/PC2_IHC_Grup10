@@ -1,0 +1,54 @@
+name: Capturar evidencias E2E de TriageVoz
+on:
+  push:
+    branches: [evidencias-e2e-20261014]
+    paths:
+      - scripts/capturar_evidencias_e2e.mjs
+      - .github/workflows/capturas-e2e.yml
+      - public/app.js
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  evidencia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar navegador de pruebas
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Iniciar prototipo ficticio
+        run: |
+          STORAGE_FILE="$RUNNER_TEMP/casos-e2e.json" npm start > "$RUNNER_TEMP/triagevoz.log" 2>&1 &
+          for i in $(seq 1 35); do
+            if curl -fsS http://127.0.0.1:4173/api/health; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/triagevoz.log"
+          exit 1
+      - name: Recorrer flujo y capturar imágenes
+        run: node scripts/capturar_evidencias_e2e.mjs
+      - name: Validar cinco evidencias PNG
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files=list(Path('assets/evidencias-integracion').glob('*.png'))
+          assert len(files)==5,(len(files),files)
+          for f in files:
+              assert f.stat().st_size>10000,(f,f.stat().st_size)
+          print('Validación de cinco capturas reales de Chromium correcta.')
+          PY
+      - name: Publicar capturas en rama
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/evidencias-integracion
+          if ! git diff --cached --quiet; then
+            git commit -m "test(evidence): publicar capturas del recorrido E2E real en Chromium"
+            git push
+          fi

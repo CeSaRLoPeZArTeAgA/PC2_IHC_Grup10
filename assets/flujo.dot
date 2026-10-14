@@ -1,15 +1,18 @@
-digraph Flow {
- graph [rankdir=TB, bgcolor=white, pad=.2, nodesep=.22, ranksep=.3];
- node [shape=box, style="rounded,filled", fillcolor="#ECF7F7", color="#487A82", fontname="DejaVu Sans", fontsize=10];
- edge [color="#477881", fontname="DejaVu Sans", fontsize=9];
- a [label="1. Preferencias y aviso"];
- b [label="2. Silueta, voz o texto"];
- c [label="Confirmar región",shape=diamond,fillcolor="#FFF1D7"];
- d [label="3. Entrevista guiada"];
- e [label="4. Revisar declaraciones"];
- f [label="5. Resumen · IA identificada"];
- g [label="Enviar / pendiente de conexión"];
- h [label="Rol médico: código / recepción"];
- i [label="Respuesta y consulta de estado"];
- a -> b -> c; c -> b [label="Corregir"];c -> d [label="Sí"];d -> e; e -> d [label="Editar"];e -> f -> g -> h -> i;
+digraph PC2 {
+ graph [rankdir=TB, bgcolor=white, pad="0.25", nodesep="0.32", ranksep="0.38", fontname="DejaVu Sans"];
+ node [shape=box, style="rounded,filled", fillcolor="#eaf5f8", color="#08738a", fontname="DejaVu Sans", fontsize=11];
+ edge [color="#516b78", arrowsize=0.65];
+ start [label="Preferencias + alias ficticio"];
+ zona [label="Silueta frontal/posterior\no dictado/texto"];
+ valida [label="Confirmación de región"];
+ q [label="Entrevista 4 preguntas\ny perfil adaptativo"];
+ resumen [label="Resumen local / Gemini opcional"];
+ enviado [label="Caso enviado - código SALA-"];
+ bandeja [label="Bandeja de últimos casos demo"];
+ medico [label="Médico simulado consulta,\nconfirma y responde"];
+ retorno [label="Paciente consulta acuse\ny respuesta"];
+ error [label="Borrador en navegador",fillcolor="#fff1de",color="#c48a2d"];
+ start -> zona -> valida -> q -> resumen -> enviado -> bandeja -> medico -> retorno;
+ valida -> zona [label="Corregir"];
+ enviado -> error [label="Error de red"];
 }

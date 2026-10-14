@@ -92,6 +92,10 @@ Estos son **arquetipos funcionales de comparación**, no una auditoría verifica
 
 La demostración recorre preferencia, región, confirmación, preguntas, resumen, envío, consulta, acuse y respuesta. [Plan y evidencias verificables](06-pruebas-y-evidencias.md). No se presenta como sistema de salud desplegado o validado con participantes. El reconocimiento depende del soporte del navegador.
 
+## 10.1. Actualización posterior a la integración del Grupo 10
+
+La versión posterior añade silueta corporal frontal/posterior, personalización adaptativa, historial de respuestas y una bandeja de los últimos casos ficticios. La comunicación entre roles es **diferida y local**, no videollamada ni teleconsulta con autenticación clínica. Consulte [anexo técnico](14-anexo-version-actual.md), [C4 actualizado](02-arquitectura-C4.md) y [pruebas](06-pruebas-y-evidencias.md).
+
 ## 11. Conclusión y riesgo
 
 La redundancia multimodal y los estados explícitos son decisiones de IHC fundamentales. La prioridad clínica no se calcula automáticamente: requiere valoración del personal de salud. El despliegue real exigiría protección de datos de salud, identidad verificable, controles de acceso, privacidad, accesibilidad probada, infraestructura confiable y validación clínica independiente.

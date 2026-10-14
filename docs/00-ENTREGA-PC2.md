@@ -3,7 +3,7 @@
 > **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
 
 **Proyecto:** TriageVoz Rural — interfaz no convencional de apoyo al pre-triaje rural.  
-**Autor de este aporte:** César Omar López Arteaga.  
+**Integrantes del trabajo grupal:** Santa Cruz Basilio, Jesus Diego; López Arteaga, César Omar; Pumayauli Evangelista, Bryan José. Los aportes personales se documentan separadamente.  
 **Base de diseño:** LEC06 (stakeholders, RF-01…RF-17, RNF-01…RNF-10, HU-01…HU-10) y LEC07 (CU-07-01-M y SCAMPER).  
 **Estado:** prototipo académico; simulación con datos ficticios. La interfaz **no proporciona diagnóstico médico** ni está validada clínicamente.
 
@@ -67,3 +67,11 @@ Instalación de demostración: ejecutar `npm start` con Node.js 20+ y visitar `h
 - **Repositorio:** README, LICENSE MIT, diagrama C4, guía de instalación, PWA y datos ficticios.
 
 **Límites:** la voz depende del navegador; el modelo de IA remoto es opcional y requiere una clave configurada en el servidor. La gestión de roles es simulada, no apta para tratar datos de pacientes reales.
+## 6. Integración y documentación actualizada
+
+- [Anexo de versión integrada](14-anexo-version-actual.md): alcance de la bandeja y su comportamiento local.
+- [Matriz de pruebas revisada](06-pruebas-y-evidencias.md): concurrencia, respuestas idempotentes y límites de validación.
+- [Presentación grupal de sustentación](../presentacion/PC2-TriageVoz-Rural-Grupo10.pptx): editable, generada desde el script del repositorio.
+- [Fuente reproducible de presentación](../scripts/generar_presentacion.cjs).
+
+**Vigencia:** Los informes Word/PDF y capturas originales son antecedentes documentales; las nuevas funcionalidades se documentan en el anexo de integración. El registro de screenshots de la interfaz final y el video siguen pendientes de captura y grabación por los integrantes; no se declaran como evidencia disponible antes de realizarlos.

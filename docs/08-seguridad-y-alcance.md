@@ -1,14 +1,16 @@
-# Alcance y riesgos
+# Seguridad, limitaciones y alcance real — PC2
 
-> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+> **Integrantes, Grupo 10:** Santa Cruz Basilio, Jesus Diego (20235005G); López Arteaga, César Omar (20236743A); Pumayauli Evangelista, Bryan José (20212209E).
 
-- Prototipo de interacción, **no producto médico**.
-- Solo datos inventados; prohibido incorporar datos reales de pacientes.
-- No hay autenticación ni autorización sanitaria: el rol médico es una **simulación**.
-- Un código de caso NO prueba identidad ni protege confidencialidad.
-- El almacenamiento JSON/localStorage es inadecuado para datos sensibles.
-- El permiso de micrófono y la disponibilidad de Web Speech API dependen del navegador.
-- Idioma quechua: solo selector ficticio, sin traducción clínica validada.
-- LLM: estructura texto declarado; no diagnostica, prescribe ni asigna prioridad clínica.
-- Cortes de red: mostrar estado pendiente; nunca confundir enviado con recibido.
-- Antes de uso real se requieren aprobación institucional, privacidad, revisión legal, evaluación de accesibilidad, controles de seguridad y validación clínica.
+- **Prototipo académico no clínico.** No diagnostica, prescribe, clasifica urgencias ni ofrece recomendaciones médicas automáticas.
+- Los ejemplos de `data/casos-ficticios.json` son inventados; las respuestas automáticas de ejemplo no indican tratamientos.
+- **Multirol local no equivale a multiusuario distribuido:** el paciente y el médico simulado usan el mismo servicio Node.js en `127.0.0.1`; otra computadora no accede a este localhost por defecto.
+- La bandeja `/api/rooms` muestra los últimos casos guardados, no salas audiovisuales o participantes conectados.
+- Sin autenticación, autorización RBAC, consentimiento clínico, auditoría sanitaria o cifrado de historiales. Los códigos **no son credenciales**.
+- La persistencia de JSON contiene casos ficticios en disco; `localStorage` guarda preferencias y último código demo. El borrador puede permanecer en el dispositivo ante error.
+- El dictado Web Speech API requiere compatibilidad, permiso de micrófono y puede depender de servicios externos del navegador; texto siempre disponible.
+- Quechua: selección simulada, sin traducción validada.
+- Gemini: opcional mediante clave de entorno **solo en servidor**; no cargar datos de pacientes reales.
+- El Service Worker utiliza caché de recursos web; no habilita sincronización de casos en desconexión.
+- Pruebas automatizadas evitan contaminar `data/runtime.json` de usuarios.
+- Para una implementación de salud real: análisis legal y privacidad, consentimiento, autenticación robusta, cifrado, validación clínica, redes seguras, respaldo, accesibilidad y evaluación formal con usuarios.

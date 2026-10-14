@@ -1,0 +1,43 @@
+name: Regenerar aporte PC2 y roster correcto
+on:
+  push:
+    branches: [revision-final-codigos-aportes-20261014]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  archivos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Preparar dependencias
+        run: |
+          python -m pip install python-docx Pillow
+          npm install --no-save --package-lock=false pptxgenjs
+          if ! command -v libreoffice >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y libreoffice-writer libreoffice-impress poppler-utils
+          fi
+      - name: Regenerar todos los entregables
+        run: python scripts/finalizar_entregables_pc2.py
+      - name: Validar flujo y documentos
+        run: |
+          npm test
+          python -c "from docx import Document;d=Document('mi-aporte-cesar-lopez-arteaga.docx');assert len(d.inline_shapes)==4"
+          pdftotext presentacion/PC2-TriageVoz-Rural-Grupo10.pdf - | grep -q '20215508C'
+      - name: Publicar documentos actualizados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md docs/ mi-aporte-*.doc mi-aporte-*.docx mi-aporte-*.md presentacion/ scripts/generar_presentacion.cjs
+          if ! git diff --cached --quiet; then
+            git commit -m "build(pc2): publicar aportes y documentos con códigos oficiales y evidencias"
+            git push
+          fi

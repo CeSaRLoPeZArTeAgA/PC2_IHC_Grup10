@@ -1,6 +1,6 @@
 # Checklist PC2
 
-> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20215508C | Pumayauli Evangelista, Bryan José — 20212209E.
 
 | Rubro | Artefacto en repositorio | Estado |
 |---|---|---|
@@ -26,4 +26,4 @@
 | Anexo de cambios de integración | docs/14-anexo-version-actual.md (DOCX/PDF generados) | Actualizado; comprobar generación y enlaces |
 | Presentación grupal | presentacion/PC2-TriageVoz-Rural-Grupo10.pptx y .pdf | Generadas: 10 diapositivas |
 | Pruebas de concurrencia e idempotencia | tests/revision-integracion.test.mjs | 12/12 pruebas aprobadas en integración |
-| Capturas actuales y video de presentación | assets/ (histórico), video no adjunto | **Pendiente** |
+| Capturas actuales y video de presentación | assets/evidencias-integracion (5 capturas E2E), video no adjunto | Capturas disponibles; video pendiente |

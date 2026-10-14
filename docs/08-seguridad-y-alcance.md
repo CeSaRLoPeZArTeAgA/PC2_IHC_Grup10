@@ -1,6 +1,6 @@
 # Seguridad, limitaciones y alcance real — PC2
 
-> **Integrantes, Grupo 10:** Santa Cruz Basilio, Jesus Diego (20235005G); López Arteaga, César Omar (20236743A); Pumayauli Evangelista, Bryan José (20212209E).
+> **Integrantes, Grupo 10:** Santa Cruz Basilio, Jesus Diego (20235005G); López Arteaga, César Omar (20215508C); Pumayauli Evangelista, Bryan José (20212209E).
 
 - **Prototipo académico no clínico.** No diagnostica, prescribe, clasifica urgencias ni ofrece recomendaciones médicas automáticas.
 - Los ejemplos de `data/casos-ficticios.json` son inventados; las respuestas automáticas de ejemplo no indican tratamientos.

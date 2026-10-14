@@ -2,7 +2,7 @@
 
 > **Integrantes — Grupo 10, UNI, CC451 (PC2)**  
 > Santa Cruz Basilio, Jesus Diego — 20235005G  
-> López Arteaga, César Omar — 20236743A  
+> López Arteaga, César Omar — 20215508C  
 > Pumayauli Evangelista, Bryan José — 20212209E
 
 ## Procedencia de las capturas

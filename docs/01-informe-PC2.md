@@ -1,10 +1,10 @@
 # Informe técnico PC2 — TriageVoz Rural
 
-> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20236743A | Pumayauli Evangelista, Bryan José — 20212209E.
+> **Integrantes, Grupo 10 — CC451 PC2:** Santa Cruz Basilio, Jesus Diego — 20235005G | López Arteaga, César Omar — 20215508C | Pumayauli Evangelista, Bryan José — 20212209E.
 
 **CC451 Interacción Humano-Computador · UNI 2026-II**
 
-**Autor del aporte individual:** César Omar López Arteaga (20236743A).
+**Autor del aporte individual:** César Omar López Arteaga (20215508C).
 
 ## 1. Dominio y problema
 

@@ -1,24 +1,68 @@
 [
   {
-    "alias": "Caso ficticio A",
-    "region": "Cabeza",
+    "alias": "Posta Huancavelica · Paciente con lumbalgia",
+    "region": "Espalda baja (lumbar)",
     "answers": {
-      "motivo": "Molestia de cabeza simulada",
-      "inicio": "Hace dos horas",
-      "intensidad": "Moderada",
-      "adicionales": "Sin datos adicionales"
+      "motivo": "Dolor punzante e incapacitante al intentar agacharse tras cargar sacos en la cosecha",
+      "inicio": "Hace 2 días tras jornada agrícola pesada",
+      "intensidad": "Severa (8/10), empeora notablemente al ponerse de pie",
+      "adicionales": "Rigidez lumbar matutina y dificultad para caminar distancias medias"
     },
-    "priority": "Pendiente de valoración profesional"
+    "priority": "Pendiente de valoración del personal sanitario"
   },
   {
-    "alias": "Caso ficticio B",
-    "region": "Brazo izquierdo",
+    "alias": "Posta Cajatambo · Paciente adulto mayor",
+    "region": "Tórax",
     "answers": {
-      "motivo": "Molestia de brazo simulada",
-      "inicio": "Esta mañana",
-      "intensidad": "Leve",
-      "adicionales": "Sin datos adicionales"
+      "motivo": "Sensación de opresión en el pecho al caminar en subida y dificultad para respirar",
+      "inicio": "Esta madrugada (hace aproximadamente 6 horas)",
+      "intensidad": "Moderada a fuerte (7/10), se alivia parcialmente con el reposo",
+      "adicionales": "Mareos leves, sudoración fría y sensación de fatiga rápida"
     },
-    "priority": "Pendiente de valoración profesional"
+    "priority": "Pendiente de valoración del personal sanitario"
+  },
+  {
+    "alias": "Posta Andahuaylas · Paciente comunitaria",
+    "region": "Cabeza",
+    "answers": {
+      "motivo": "Dolor de cabeza pulsátil continuo con molestia acentuada a la luz solar",
+      "inicio": "Hace 3 días, con incremento de intensidad ayer por la tarde",
+      "intensidad": "Moderada (6/10), pulsátil en la región frontal y temporal",
+      "adicionales": "Náuseas leves sin vómitos, molestia ante ruidos fuertes"
+    },
+    "priority": "Pendiente de valoración del personal sanitario"
+  },
+  {
+    "alias": "Posta Paucartambo · Joven agricultor",
+    "region": "Pierna derecha",
+    "answers": {
+      "motivo": "Hinchazón y dolor en el tobillo y pantorrilla tras pisar en falso en terreno comunal",
+      "inicio": "Ayer por la tarde durante labores en campo",
+      "intensidad": "Moderada (5/10), dolor agudo al intentar apoyar el peso del cuerpo",
+      "adicionales": "Edema local evidente y aumento de calor, sin herida visible"
+    },
+    "priority": "Pendiente de valoración del personal sanitario"
+  },
+  {
+    "alias": "Posta Yauyos · Paciente comunero",
+    "region": "Abdomen",
+    "answers": {
+      "motivo": "Dolor abdominal tipo cólico difuso y retorcijones frecuentes tras ingesta de alimentos",
+      "inicio": "Ayer por la noche (hace aproximadamente 14 horas)",
+      "intensidad": "Moderada e intermitente (6/10), con espasmos periódicos",
+      "adicionales": "Sensación de sequedad bucal y sed constante"
+    },
+    "priority": "Pendiente de valoración del personal sanitario"
+  },
+  {
+    "alias": "Posta Chumbivilcas · Trabajadora textil",
+    "region": "Brazo derecho",
+    "answers": {
+      "motivo": "Dolor muscular continuo y sensación de adormecimiento desde el hombro hasta el antebrazo",
+      "inicio": "Progresivo desde hace 4 días durante trabajo en telar tradicional",
+      "intensidad": "Leve a moderada (4/10), aumenta al sostener herramientas",
+      "adicionales": "Sensación de hormigueo en dedos pulgar e índice de la mano derecha"
+    },
+    "priority": "Pendiente de valoración del personal sanitario"
   }
 ]

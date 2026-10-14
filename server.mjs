@@ -5,18 +5,30 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 const root=path.dirname(fileURLToPath(import.meta.url));
 const pub=path.join(root,'public');
-const storage=path.join(root,'data','runtime.json');
+const storage=process.env.STORAGE_FILE||path.join(root,'data','runtime.json');
 let cases=[];
 try{const r=JSON.parse(await fs.readFile(storage,'utf8'));if(Array.isArray(r))cases=r;}catch{}
-const seedRooms=()=>{
-  if(!cases.length){
-    cases=[
-      {id:crypto.randomUUID(),code:'HUANCA01',alias:'Posta Huancavelica · Paciente con lumbalgia',region:'Espalda baja (lumbar)',answers:{motivo:'Dolor intenso al agacharse tras cargar peso',inicio:'Hace 2 días',intensidad:'Severa',adicionales:'Dificultad para caminar'},summary:'Zona: Espalda baja (lumbar). Motivo: Dolor lumbar tras esfuerzo físico.',priority:'Pendiente de valoración del personal sanitario',status:'enviado',createdAt:new Date().toISOString(),ackAt:null,replies:[]},
-      {id:crypto.randomUUID(),code:'CAJATA02',alias:'Posta Cajatambo · Paciente adulto mayor',region:'Tórax',answers:{motivo:'Sensación de opresión en el pecho y fatiga',inicio:'Esta madrugada',intensidad:'Moderada',adicionales:'Mareos leves'},summary:'Zona: Tórax. Motivo: Opresión torácica y fatiga matutina.',priority:'Pendiente de valoración del personal sanitario',status:'recibido',createdAt:new Date(Date.now()-3600000).toISOString(),ackAt:new Date(Date.now()-1800000).toISOString(),replies:[{author:'Médico remoto (demo, no autenticado)',message:'Priorizar toma de signos vitales, reposo y mantener en observación.',createdAt:new Date(Date.now()-1200000).toISOString()}]}
-    ];
-  }
-};
-seedRooms();
+if(!cases.length){
+  try{
+    const sample=JSON.parse(await fs.readFile(path.join(root,'data','casos-ficticios.json'),'utf8'));
+    if(Array.isArray(sample)){
+      const codes=['HUANCA01','CAJATA02','ANDAHU03','PAUCAR04','YAUYOS05','CHUMBI06'];
+      cases=sample.map((s,i)=>({
+        id:crypto.randomUUID(),
+        code:codes[i]||crypto.randomBytes(4).toString('hex').toUpperCase(),
+        alias:s.alias,
+        region:s.region,
+        answers:s.answers,
+        summary:`Zona: ${s.region}. Motivo: ${s.answers.motivo}. Inicio: ${s.answers.inicio}. Intensidad: ${s.answers.intensidad}. Adicionales: ${s.answers.adicionales}.`,
+        priority:s.priority||'Pendiente de valoración del personal sanitario',
+        status:i%2===1?'recibido':'enviado',
+        createdAt:new Date(Date.now()-(6-i)*1800000).toISOString(),
+        ackAt:i%2===1?new Date(Date.now()-(6-i)*1200000).toISOString():null,
+        replies:i%2===1?[{author:'Médico remoto (demo, no autenticado)',message:'Indicaciones de reposo, control de signos vitales en posta y vigilancia de signos de alarma.',createdAt:new Date(Date.now()-(6-i)*900000).toISOString()}]:[]
+      }));
+    }
+  }catch{}
+}
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.json':'application/json','.webmanifest':'application/manifest+json'};
 const str=(s,n=700)=>String(s??'').trim().slice(0,n);
 const send=(res,status,obj)=>{res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'});res.end(JSON.stringify(obj));};

@@ -17,3 +17,11 @@ body.high .adaptive-banner{background:#262211;border-color:#ffd54f;color:#fff}
 body.high .adaptive-banner strong,body.high .adaptive-banner p{color:#fff}
 body.high .adaptive-actions button{background:#000;color:#fff;border-color:#fff}
 body.high .rhythm-hint{background:#112229;color:#fff;border-color:#00bcd4}
+.reply-history{background:#f1f8fa;border:1px solid #b7d6df;border-radius:12px;margin-top:14px;padding:15px}
+.reply-history h3{font-size:1.05rem;margin:0 0 10px}
+.reply-history ol{margin:0;padding-left:22px}
+.reply-history li{padding:8px 0;border-bottom:1px solid #d2e4e9;overflow-wrap:anywhere}
+.reply-history li:last-child{border-bottom:none}
+.reply-history p{white-space:pre-wrap;margin:4px 0 0}
+body.high .reply-history{background:#1a1a1a;border-color:#666}
+body.high .reply-history p{color:#fff}

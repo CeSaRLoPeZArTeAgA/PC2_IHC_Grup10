@@ -32,6 +32,7 @@ try{
  await page.locator('#roomList .room-card').first().click();
  await page.locator('#caseView').waitFor({state:'visible'});
  await page.locator('#ack').click();
+ await page.waitForFunction(() => document.querySelector('#caseState')?.textContent.includes('recibido'));
  assert.match(await content('#caseState'),/recibido/);
  const response='Caso ficticio recibido para demostracion; pendiente de revision por personal de salud.';
  await page.locator('#message').fill(response);
@@ -42,12 +43,14 @@ try{
  await shot('03-confirmacion-historial.png');
  await page.locator('#patientTab').click();
  await page.locator('#refresh').click();
+ await page.waitForFunction(() => document.querySelector('#receipt')?.textContent.includes('recibido'));
  assert.match(await content('#receipt'),/recibido/);
  assert.ok((await content('#doctorResponse')).includes(response));
  await shot('04-respuesta-paciente.png');
  await page.reload();
  await page.locator('#p5').waitFor({state:'visible',timeout:12000});
  await page.locator('#refresh').click();
+ await page.waitForFunction(expected => document.querySelector('#doctorResponse')?.textContent.includes(expected),response);
  assert.ok((await content('#doctorResponse')).includes(response));
  await shot('05-recarga-caso.png');
  console.log('E2E correcto; caso:',code.trim());
